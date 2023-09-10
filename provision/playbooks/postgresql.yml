@@ -1,4 +1,4 @@
-- name: Create a postgres database
+- name: Creates messageboard database
   hosts:
     - database_postgresql
   gather_facts: false
@@ -25,7 +25,7 @@
                    
   tasks: 
              
-    - name: 'Create a user'
+    - name: 'Create user'
       community.general.postgresql_user:
         state: present
         name: "{{ aws.instance.postgresql.database.user.admin.name }}"
@@ -41,7 +41,7 @@
         owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
         encoding: UTF8
    
-    - name: 'Grant db user access'
+    - name: 'Grant user access'
       community.general.postgresql_privs:
         type: database
         database: "{{ aws.instance.postgresql.database.name }}"

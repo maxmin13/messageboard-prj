@@ -2,7 +2,7 @@
 
 ##
 ## Creates an AWS datacenter running the scripts in git@github.com:maxmin13/ansible-prj.git project.
-## Provisions the instances with the script in git@github.com:maxmin13/django-prj.git project.
+## Provisions the instances with the script in git@github.com:maxmin13/messageboard-prj.git project.
 ## 
 ## ./install.exp <aws admin password>
 ##
@@ -22,68 +22,16 @@ set timeout -1
 set VENV_DIR "/home/vagrant/workspace/ansible-prj/.venv"
 set ANSIBLE_PLAYBOOK_CMD "${VENV_DIR}/bin/ansible-playbook"
 set ANSIBLE_PRJ_DIR "/home/vagrant/workspace/ansible-prj"
-set DJANGO_PRJ_DIR "/home/vagrant/workspace/django-prj"
+set MESSAGEBOARD_PRJ_DIR "/home/vagrant/workspace/messageboard-prj"
 set PASSWORD [lindex $argv 0]
 
-cd ${ANSIBLE_PRJ_DIR}/bin
 
-spawn ./make.sh
 
-expect eof
-catch wait result
+cd ${MESSAGEBOARD_PRJ_DIR}/provision
 
-cd ${ANSIBLE_PRJ_DIR}/provision
 
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/upgrade.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
 
-expect eof
-catch wait result
-
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/openssl.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
-
-expect eof
-catch wait result
-
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/python.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
-
-expect eof
-catch wait result
-
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
-
-expect eof
-catch wait result
-
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/nginx.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
-
-expect eof
-catch wait result
-
-cd ${DJANGO_PRJ_DIR}/provision
-
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
-match_max 100000
-expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
-
-expect eof
-catch wait result
-
+# deploy django framework
 spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/deploy-django.yml
 match_max 100000
 expect -exact "BECOME password: "

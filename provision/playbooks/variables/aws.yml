@@ -56,5 +56,5 @@ aws:
         dir:
           path: "/opt/.venv"
       repository:
-        url: git@github.com:maxmin13/django-prj.git
+        url: git@github.com:maxmin13/messageboard-prj.git
 ...
