@@ -25,11 +25,68 @@ set ANSIBLE_PRJ_DIR "/home/vagrant/workspace/ansible-prj"
 set MESSAGEBOARD_PRJ_DIR "/home/vagrant/workspace/messageboard-prj"
 set PASSWORD [lindex $argv 0]
 
+cd ${ANSIBLE_PRJ_DIR}/bin
 
+spawn ./make.sh
+
+cd ${ANSIBLE_PRJ_DIR}/provision
+
+expect eof
+catch wait result
+
+cd ${ANSIBLE_PRJ_DIR}/provision
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/upgrade.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
+
+expect eof
+catch wait result
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/openssl.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
+
+expect eof
+catch wait result
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/python.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
+
+expect eof
+catch wait result
+
+# Install postgresql server
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
+
+expect eof
+catch wait result
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/nginx.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
+
+expect eof
+catch wait result
 
 cd ${MESSAGEBOARD_PRJ_DIR}/provision
 
+# Create messageboard database
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${PASSWORD}\r"
 
+expect eof
+catch wait result
 
 # deploy django framework
 spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/deploy-django.yml
