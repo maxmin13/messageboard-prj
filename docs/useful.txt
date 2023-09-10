@@ -1,0 +1,3 @@
+
+rm -f ~/.ssh/known_hosts && ssh -v -i ../ansible-prj/access/admin-key -p 22 awsadmin@52.49.230.147 
+

@@ -1,0 +1,8 @@
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream={{ aws.instance.gunicorn.socket.file.path }}
+
+[Install]
+WantedBy=sockets.target

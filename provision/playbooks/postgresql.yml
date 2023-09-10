@@ -1,0 +1,54 @@
+- name: Create a postgres database
+  hosts:
+    - database_postgresql
+  gather_facts: false
+  vars_files:
+    - variables/vars.yml
+    - variables/aws.yml
+    - variables/secrets.yml
+    
+  handlers:
+    - name: 'Restart postgresql'
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted      
+      
+  pre_tasks:
+      
+    - name: 'Controller host configuration'
+      ansible.builtin.debug:
+        msg:
+        - "domain: {{ instance_dns_domain }}"
+        - "ssh port: {{ ansible_port }}"
+        - "ssh user: {{ ansible_user }}"
+        - "ssh key: {{ ansible_private_key_file }}"
+                   
+  tasks: 
+             
+    - name: 'Create a user'
+      community.general.postgresql_user:
+        state: present
+        name: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        password: "{{ aws.instance.postgresql.database.user.admin.password }}"
+      become: true
+      become_user: postgres      
+      
+    - name: 'Create the database'
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ aws.instance.postgresql.database.name }}"
+        owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        encoding: UTF8
+   
+    - name: 'Grant db user access'
+      community.general.postgresql_privs:
+        type: database
+        database: "{{ aws.instance.postgresql.database.name }}"
+        roles: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        grant_option: no
+        privs: all
+      become: true
+      become_user: postgres    
+      notify: Restart postgresql  
+      

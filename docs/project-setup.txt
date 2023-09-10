@@ -1,0 +1,207 @@
+
+##################################
+# First setup of a Djanog project
+##################################
+
+mkdir messageboard-prj
+cd messageboard-prj
+
+# Create the development virtual environment 
+python -m venv ".venv"
+source .venv/bin/activate
+
+## Software required in production AWS:
+python -m pip install ansible~=8.2.0
+python -m pip install botocore~=1.31.0
+python -m pip install boto3~=1.28.0
+python -m pip install Django~=4.2.0
+python -m pip install gunicorn~=21.2.0
+python -m pip install environs~=9.5.0
+python -m pip install "psycopg2-binary"~=2.9.0
+python -m pip install whitenoise~=6.5.0
+python -m pip install dj-database-url~=2.0.0
+
+python -m pip freeze > provision/playbooks/files/admin/requirements.txt
+
+## Development software:
+python -m pip install ansible-lint
+python -m pip install pytest # a command-line tool that automatically finds tests you've written, runs the tests, and reports the results.
+python -m pip install pycodestyle flake8 black
+python -m pip install pipreqs -U # software to create requirement files
+
+django-admin startproject django_project .
+
+############################
+# Eclipse 
+############################
+
+install eclipse pydev plugin from marketplace.
+
+File/New/Project (not PyDev project)
+Choose General/Project, click Next
+Enter a project name
+Un-check "use default location" and set the location to the top directory of my project
+Click Finish
+
+menu Window, preferences, PDev, Python Interpreter,
+new, browse for python/pypy exe
+enter the path to the venv executable /home/vagrant/workspace/messageboard-prj/.venv/bin/python
+select all libraries
+apply and close
+
+Right-click on the project and select PyDev / Set as Pydev Project
+
+############################
+# Github
+############################
+
+create a messageboard-prj project in github.
+
+cd messageboard-prj
+git init
+
+touch README.md
+
+echo '__pycache__/' >> .gitignore
+echo '.pytest_cache' >> .gitignore
+echo '.project' >> .gitignore
+echo '.pydevproject' >> .gitignore
+echo '.settings' >> .gitignore
+echo '.dbeaver' >> .gitignore
+echo '.venv/' >> .gitignore
+echo '*.sqlite3' >> .gitignore
+
+git add . && git commit -m "Initial commit"
+git remote add origin git@github.com:maxmin13/messageboard-prj.git
+eval `ssh-agent -s`
+ssh-add /home/vagrant/.ssh/id_github
+git push origin master
+
+###########################
+# local server
+###########################
+
+python manage.py migrate
+python manage.py runserver
+
+http://127.0.0.1:8000/admin
+
+########
+# Tests
+########
+
+python manage.py test
+
+#############
+# Deployment
+#############
+
+1) create a virtual environment for production.
+
+cd messageboard-prj
+python -m venv ".temp_venv"
+source .temp_venv/bin/activate
+
+2) install Django
+
+python -m pip install Django~=4.2.0
+
+3) Install Gunicorn as a WSGI server 
+
+python -m pip install gunicorn~=20.1.0
+
+4) Install Psycopg to connect with a PostgreSQL database
+
+python -m pip install "psycopg[binary]"~=3.1.0
+
+5) Install environs for environment variables
+
+python -m pip install "environs[django]"~=9.5.0
+
+6) Update DATABASES in django_project/settings.py
+
+        from environs import Env
+        
+        env = Env()
+        env.read_env()
+
+        DATABASES = {
+            "default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3"),
+        }
+
+7) Initialize database:
+        
+   python manage.py migrate
+    
+8) Static files in production
+
+python -m pip install whitenoise~=6.4.0
+
+        # settings.py
+        INSTALLED_APPS = [
+                "django.contrib.admin",
+                    "django.contrib.auth",
+                    "django.contrib.contenttypes",
+                    "django.contrib.sessions",
+                    "django.contrib.messages",
+                    "whitenoise.runserver_nostatic",  # new
+                    "django.contrib.staticfiles",
+                    "posts",
+        ]
+        
+        # settings.py        
+        MIDDLEWARE = [
+            "django.middleware.security.SecurityMiddleware",
+            "django.contrib.sessions.middleware.SessionMiddleware",
+            "whitenoise.middleware.WhiteNoiseMiddleware",  # new
+            "django.middleware.common.CommonMiddleware",
+            "django.middleware.csrf.CsrfViewMiddleware",
+            "django.contrib.auth.middleware.AuthenticationMiddleware",
+            "django.contrib.messages.middleware.MessageMiddleware",
+            "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        ]        
+
+        # settings.py
+        STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # new
+        
+        STATIC_ROOT = BASE_DIR / "staticfiles"
+
+python manage.py collectstatic
+
+9) generate a requirements.txt file 
+
+cd messageboard-prj
+python -m pip freeze > provision/playbooks/files/admin/requirements.txt
+deactivate
+rm -rf .temp_venv   
+
+10) update update ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, DEBUG, and SECRET_KEY in django_project/settings.py
+
+        # list of the host/domain names that our Django website can serve.
+        ALLOWED_HOSTS = ["*"]
+        
+        CSRF_TRUSTED_ORIGINS = ["https://admin.maxmin.it"]
+        
+##########
+# pgAdmin
+##########
+
+right click on Servers
+Register, Server
+Name: messageboard
+Server group: Servers
+
+select Connection tab
+Host name/address: admin.maxmin.it
+Port: 5432
+Maintenance database: postgresqldb
+Username: postgresqladmin
+Password: secret
+
+Save
+
+
+
+
+
+        

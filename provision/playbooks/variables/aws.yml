@@ -1,0 +1,60 @@
+---
+
+aws:
+  instance: 
+    download:
+      dir:
+        path: /opt/download  
+    admin:
+      user: "awsadmin"
+      ssh:
+        key:
+          path: /home/vagrant/workspace/ansible-prj/access/admin-key
+      dns:
+        domain: admin.maxmin.it
+    python:
+      install:
+        dir:
+          path: /usr/local/bin
+      executable: "{{ python_executable }}"
+      version: "{{ python_version }}"  
+    postgresql:
+        database:
+          name: "postgresqldb"
+          user:
+            admin: 
+              name: "postgresqladmin"    
+              password: "{{ postgresqladmin_password }}"
+    gunicorn:
+       config:
+         dir:
+           path: "/opt/gunicorn"
+       socket:
+         file: 
+           path: "/run/gunicorn.sock"      
+    nginx:
+      install:
+         dir:
+           path: "/etc/nginx"
+      tls:
+        dir:
+          path: "/etc/nginx/ssl"
+      key:
+        file: "nginx.key"
+      cert:
+        file: "nginx.crt"
+      root:
+        dir:
+          path: "/usr/share/nginx/html"
+      https:
+        port: "8443"            
+    project:
+      name: "{{ project_name }}"
+      dir:
+        path: "{{ project_dir }}"
+      venv:
+        dir:
+          path: "/opt/.venv"
+      repository:
+        url: git@github.com:maxmin13/django-prj.git
+...
