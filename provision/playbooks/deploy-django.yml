@@ -184,7 +184,7 @@
       register: result
       failed_when: "'Django site admin' not in result.content"    
 
-    - name: django create superuser
+    - name: django create admin app superuser
       community.general.django_manage:
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         project_path: "{{ aws.instance.project.dir.path }}"
