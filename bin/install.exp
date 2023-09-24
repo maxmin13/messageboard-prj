@@ -29,8 +29,6 @@ cd ${ANSIBLE_PRJ_DIR}/bin
 
 spawn ./make.sh
 
-cd ${ANSIBLE_PRJ_DIR}/provision
-
 expect eof
 catch wait result
 

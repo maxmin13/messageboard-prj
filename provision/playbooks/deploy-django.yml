@@ -111,6 +111,12 @@
         project_path: "{{ aws.instance.project.dir.path }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         
+    - name: Django environment file
+      ansible.builtin.template:
+        src: django/env.j2
+        dest: "{{ aws.instance.project.dir.path }}/.env"
+        mode: 400          
+        
     - name: Remove the nginx config file
       become: true
       ansible.builtin.file:
@@ -160,9 +166,7 @@
         daemon_reload: true
         enabled: true
         name: gunicorn
-      environment: 
-        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
-        
+   
     - name: Restart nginx 
       ansible.builtin.systemd:
         state: restarted
@@ -178,7 +182,17 @@
         validate_certs: false
         return_content: true
       register: result
-      failed_when: "'Django site admin' not in result.content"       
+      failed_when: "'Django site admin' not in result.content"    
+
+    - name: django create superuser
+      community.general.django_manage:
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.dir.path }}"
+        command: "createsuperuser --noinput --username={{ aws.instance.project.django.superuser.name }} --email={{ aws.instance.project.django.superuser.name }}@gmail.com"     
+      ignore_errors: True
+      environment: 
+        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
+        DJANGO_SUPERUSER_PASSWORD: "{{ aws.instance.project.django.superuser.password }}" 
 
   post_tasks:
   

@@ -55,6 +55,10 @@ aws:
       venv:
         dir:
           path: "/opt/.venv"
+      django:
+          superuser:
+            name: "admin"
+            password: "admin"
       repository:
         url: git@github.com:maxmin13/messageboard-prj.git
 ...

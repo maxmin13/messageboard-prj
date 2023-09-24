@@ -28,6 +28,8 @@ python -m pip install ansible-lint
 python -m pip install pytest # a command-line tool that automatically finds tests you've written, runs the tests, and reports the results.
 python -m pip install pycodestyle flake8 black
 python -m pip install pipreqs -U # software to create requirement files
+python -m pip install Django~=4.2.0
+python -m pip install environs~=9.5.0
 
 django-admin startproject django_project .
 
