@@ -1,9 +1,8 @@
 # pages/urls.py
 from django.urls import path
-from .views import HomePageView
-from .views import AboutPageView
+from .views import PostsView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("posts.urls")),  # new
+   path("posts", PostsView.as_view(), name="posts"),
+    
 ]
