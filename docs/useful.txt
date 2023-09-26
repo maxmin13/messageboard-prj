@@ -6,3 +6,7 @@ rm -f ~/.ssh/known_hosts && ssh -v -i ../ansible-prj/access/admin-key -p 22 awsa
 --start-at-task  'django create superuser'
 
 python manage.py makemigrations posts
+
+
+
+python manage.py runserver
