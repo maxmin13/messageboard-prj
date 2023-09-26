@@ -96,6 +96,7 @@
       with_items:
       - "{{ aws.instance.download.dir.path }}/manage.py"
       - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
+      - "{{ aws.instance.download.dir.path }}/apps" 
       
     - name: Run database migrations
       community.general.django_manage:
