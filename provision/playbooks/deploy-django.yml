@@ -27,16 +27,21 @@
   
     - name: Upgrade all packages
       ansible.builtin.yum: name=* state=latest 
-                 
+      
+    - name: Delete download directory
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: absent       
+                  
+  tasks:
+  
     - name: Create download directory
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: 488         
- 
-  tasks:
+        mode: 488   
    
     - name: Create virtualenv
       ansible.builtin.pip:

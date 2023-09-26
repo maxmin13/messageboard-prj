@@ -7,7 +7,7 @@
   vars_files:
     - variables/vars.yml
     - variables/aws.yml
-#    - variables/secrets.yml
+    - variables/secrets.yml
     
   handlers:
     - name: 'Restart nginx'
@@ -32,15 +32,20 @@
     - name: Upgrade all packages
       ansible.builtin.yum: name=* state=latest 
                  
+    - name: Delete download directory
+      ansible.builtin.file:
+        path: "{{ aws.instance.download.dir.path }}"
+        state: absent        
+ 
+  tasks:
+  
     - name: Create download directory
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: 488         
- 
-  tasks:
+        mode: 488   
             
     - name: Get the project from Github (with agent forwarding)
       become: false
@@ -50,6 +55,11 @@
         version: master
         accept_hostkey: true
         update: false
+        
+    - name: Remove apps directory
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.dir.path }}/apps"
+        state: absent        
   
     - name: Move the apps folder
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
