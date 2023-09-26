@@ -1,4 +1,4 @@
-- name: Deploys Django framework
+- name: Deploys messagebord apps
   hosts:
     - class_cms
     
@@ -7,14 +7,18 @@
   vars_files:
     - variables/vars.yml
     - variables/aws.yml
-    - variables/secrets.yml
+#    - variables/secrets.yml
     
   handlers:
     - name: 'Restart nginx'
       ansible.builtin.service:
         name: nginx
         state: restarted    
- 
+    - name: 'Restart gunicorn'
+      ansible.builtin.service:
+        name: gunicorn
+        state: restarted   
+         
   pre_tasks:
       
     - name: Controller host configuration
@@ -37,41 +41,7 @@
         mode: 488         
  
   tasks:
-   
-    - name: Create virtualenv
-      ansible.builtin.pip:
-        name:
-          - pip
-          - wheel
-          - setuptools
-        state: latest
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"   
-
-    - name: Upload requirements
-      copy:
-        src: env/requirements.txt
-        dest: "{{ aws.instance.download.dir.path }}"
-        mode: '0644'
-
-    - name: Install required packages
-      ansible.builtin.pip:
-        virtualenv: "{{ aws.instance.project.venv.dir.path  }}"
-        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"
- 
-    - name: Delete download directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: absent 
-        
-    - name: Create download directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: directory
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: 488        
-             
+            
     - name: Get the project from Github (with agent forwarding)
       become: false
       ansible.builtin.git:
@@ -80,22 +50,11 @@
         version: master
         accept_hostkey: true
         update: false
- 
-    - name: Delete project directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
-        state: absent 
-        
-    - name: Create project directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
-        state: directory               
- 
-    - name: Move project
+  
+    - name: Move the apps folder
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
-      - "{{ aws.instance.download.dir.path }}/manage.py"
-      - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
+      - "{{ aws.instance.download.dir.path }}/apps" 
       
     - name: Run database migrations
       community.general.django_manage:
@@ -105,85 +64,39 @@
       environment:   
         DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
 
-    - name: Collect static files
-      community.general.django_manage:
-        command: collectstatic
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        
-    - name: Remove the nginx config file
-      become: true
-      ansible.builtin.file:
-        path: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
-        state: absent
-
-    - name: Deploy Nginx config file
-      ansible.builtin.template:
-        src: nginx/nginx.conf.j2
-        dest: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
-        mode: 436
-      notify: Restart nginx  
-      
-    - name: Gunicorn socket config file
-      ansible.builtin.template:
-        src: gunicorn/gunicorn.socket.j2
-        dest: "/etc/systemd/system/gunicorn.socket"
-        mode: 436 
-        
-    - name: Gunicorn service file
-      ansible.builtin.template:
-        src: gunicorn/gunicorn.service.j2
-        dest: "/etc/systemd/system/gunicorn.service"
-        mode: 436                       
-        
-    - name: Create gunicorn directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.gunicorn.config.dir.path }}"
-        state: directory         
-   
-    - name: Gunicorn config file
-      ansible.builtin.template:
-        src: gunicorn/gunicorn.conf.py.j2
-        dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py"
-        mode: 436  
-        
-    - name: Start gunicorn socket 
+    #- name: Collect static files
+    #  community.general.django_manage:
+    #    command: collectstatic
+     #   project_path: "{{ aws.instance.project.dir.path }}"  
+     #   virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+       
+    - name: Restart gunicorn 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
-        enabled: true
-        name: gunicorn.socket
-      
-    - name: Start gunicorn 
-      ansible.builtin.systemd:
-        state: restarted
-        daemon_reload: true
-        enabled: true
         name: gunicorn
-      environment: 
-        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
-        
+      
     - name: Restart nginx 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
         name: nginx
     
-    - name: 'Test it'
-      become: false  
-      ansible.builtin.uri:
-        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
-        method: GET
-        status_code: 200
-        validate_certs: false
-        return_content: true
-      register: result
-      failed_when: "'Django site admin' not in result.content"       
+ #   - name: 'Test it'
+ #     become: false  
+ #     ansible.builtin.uri:
+ #       url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+ #       method: GET
+ #       status_code: 200
+ #       validate_certs: false
+ #       return_content: true
+ #     register: result
+ #     failed_when: "'Django site admin' not in result.content"       
 
-  post_tasks:
-  
-    - name: Delete download directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: absent 
+ # post_tasks:
+  #
+   # - name: Delete download directory
+    #  ansible.builtin.file:
+     #   path: "{{ aws.instance.download.dir.path }}"
+      #  state: absent 
          
