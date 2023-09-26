@@ -9,7 +9,6 @@ __pycache__/
 .dbeaver
 .venv/
 staticfiles/
-apps/*/migrations/
 __pycache__/
 .pytest_cache
 .project
