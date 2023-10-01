@@ -179,7 +179,7 @@
         daemon_reload: true
         name: nginx
     
-    - name: 'Test it'
+    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
       become: false  
       ansible.builtin.uri:
         url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'

@@ -61,11 +61,29 @@
         path: "{{ aws.instance.project.dir.path }}/apps"
         state: absent        
   
-    - name: Move the apps folder
+    - name: Remove project directory
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.dir.path }}"
+        state: absent 
+        
+    - name: Create project directory
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.dir.path }}"
+        state: directory               
+ 
+    - name: Move project
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
+      - "{{ aws.instance.download.dir.path }}/manage.py"
+      - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
       - "{{ aws.instance.download.dir.path }}/apps" 
-      
+
+    - name: Django environment file
+      ansible.builtin.template:
+        src: django/env.j2
+        dest: "{{ aws.instance.project.dir.path }}/.env"
+        mode: 0400 
+              
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
@@ -74,11 +92,11 @@
       environment:   
         DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
 
-    #- name: Collect static files
-    #  community.general.django_manage:
-    #    command: collectstatic
-     #   project_path: "{{ aws.instance.project.dir.path }}"  
-     #   virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+    - name: Collect static files
+      community.general.django_manage:
+        command: collectstatic
+        project_path: "{{ aws.instance.project.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
        
     - name: Restart gunicorn 
       ansible.builtin.systemd:
