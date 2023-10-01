@@ -96,12 +96,13 @@
         path: "{{ aws.instance.project.dir.path }}"
         state: directory               
  
-    - name: Move project
+    - name: Move project files
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/manage.py"
       - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
       - "{{ aws.instance.download.dir.path }}/apps" 
+      - "{{ aws.instance.download.dir.path }}/templates"  
       
     - name: Run database migrations
       community.general.django_manage:

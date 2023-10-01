@@ -29,13 +29,13 @@
         - "ssh user: {{ ansible_user }}"
         - "ssh key: {{ ansible_ssh_private_key_file }}"
   
-    - name: Upgrade all packages
-      ansible.builtin.yum: name=* state=latest 
+   ########################################### - name: Upgrade all packages
+    ############################  ansible.builtin.yum: name=* state=latest 
                  
-    - name: Delete download directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: absent        
+   ######################## - name: Delete download directory
+  #######################    ansible.builtin.file:
+   ##############################     path: "{{ aws.instance.download.dir.path }}"
+    #############################    state: absent        
  
   tasks:
   
@@ -55,12 +55,7 @@
         version: master
         accept_hostkey: true
         update: false
-        
-    - name: Remove apps directory
-      ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}/apps"
-        state: absent        
-  
+            
     - name: Remove project directory
       ansible.builtin.file:
         path: "{{ aws.instance.project.dir.path }}"
@@ -71,12 +66,13 @@
         path: "{{ aws.instance.project.dir.path }}"
         state: directory               
  
-    - name: Move project
+    - name: Move project files
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/manage.py"
       - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
       - "{{ aws.instance.download.dir.path }}/apps" 
+      - "{{ aws.instance.download.dir.path }}/templates" 
 
     - name: Django environment file
       ansible.builtin.template:
