@@ -1,0 +1,7 @@
+
+python manage.py migrate
+python manage.py createsuperuser --username=admin --email=admin@gmail.com
+python manage.py runserver
+
+http://localhost:8000/admin
+http://localhost:8000/
