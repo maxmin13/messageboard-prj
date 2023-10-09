@@ -1,95 +1,123 @@
 #!/usr/bin/expect -f
 
 ##
-## Creates an AWS datacenter running the scripts in git@github.com:maxmin13/ansible-prj.git project.
+## Creates an AWS datacenter running the scripts in git@github.com:maxmin13/datacenter-prj.git project.
 ## Provisions the instances with the script in git@github.com:maxmin13/messageboard-prj.git project.
-## 
+##
+## set the directory of the workspace in the variable: WORKSPACE_DIR
+##
+## run:
+##
 ## ./install.exp <aws admin password>
 ##
 
-set force_conservative 0  ;# set to 1 to force conservative mode even if
-			  ;# script wasn't run conservatively originally
-			  
-if {$force_conservative} {
-	set send_slow {1 .1}
-	proc send {ignore arg} {
-		sleep .1
-		exp_send -s -- $arg
-	}
-}
+set WORKSPACE_DIR "/home/vagrant/workspace"
 
-set timeout -1
-set VENV_DIR "/home/vagrant/workspace/ansible-prj/.venv"
-set ANSIBLE_PLAYBOOK_CMD "${VENV_DIR}/bin/ansible-playbook"
-set ANSIBLE_PRJ_DIR "/home/vagrant/workspace/ansible-prj"
-set MESSAGEBOARD_PRJ_DIR "/home/vagrant/workspace/messageboard-prj"
-set PASSWORD [lindex $argv 0]
+# get the password from the command line.
+set password [lindex $argv 0]
 
-cd ${ANSIBLE_PRJ_DIR}/bin
+###########################
+## Create AWS datacenter ##
+###########################
+
+set datacenter_prj_dir "${WORKSPACE_DIR}/datacenter-prj"
+set ansible_playbook_cmd "${datacenter_prj_dir}/.venv/bin/ansible-playbook"
+
+cd ${WORKSPACE_DIR}
+
+spawn git clone git@github.com:maxmin13/datacenter-prj.git || true
+expect eof
+catch wait result
+
+cd ${datacenter_prj_dir}/bin
+
+spawn chmod 755 make.sh
+
+expect eof
+catch wait result
 
 spawn ./make.sh
 
 expect eof
 catch wait result
 
-cd ${ANSIBLE_PRJ_DIR}/provision
+cd ${datacenter_prj_dir}/provision
 
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/upgrade.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/upgrade.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/openssl.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/openssl.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/python.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/python.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
 # Install postgresql server
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/postgresql.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/nginx.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/nginx.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
-cd ${MESSAGEBOARD_PRJ_DIR}/provision
+#############################################
+## Install messageboard application on AWS ##
+#############################################
+
+set messageboard_prj_dir "${WORKSPACE_DIR}/messageboard-prj"
+set ansible_playbook_cmd "${datacenter_prj_dir}/.venv/bin/ansible-playbook"
+
+cd ${messageboard_prj_dir}/bin
+
+spawn chmod 755 make.sh
+
+expect eof
+catch wait result
+
+spawn ./make.sh
+
+expect eof
+catch wait result
+
+cd ${messageboard_prj_dir}/provision
 
 # Create messageboard database
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/postgresql.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof
 catch wait result
 
 # deploy django framework
-spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/deploy-django.yml
+spawn ${ansible_playbook_cmd} -b -K playbooks/deploy-django.yml
 match_max 100000
 expect -exact "BECOME password: "
-send -- "${PASSWORD}\r"
+send -- "${password}\r"
 
 expect eof

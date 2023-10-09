@@ -12,7 +12,7 @@ The webapp uses a PostgreSql database.</br>
 
 **Create the datacenter on AWS:**
 
-see project: github.com:maxmin13/ansible-prj.git
+see project: github.com:maxmin13/datacenter-prj.git
 
 **Clone the project:**
 
