@@ -25,7 +25,7 @@ set ansible_playbook_cmd "${datacenter_prj_dir}/.venv/bin/ansible-playbook"
 
 cd ${WORKSPACE_DIR}
 
-spawn git clone git@github.com:maxmin13/datacenter-prj.git || true
+spawn git clone git@github.com:maxmin13/datacenter-prj.git 
 expect eof
 catch wait result
 
