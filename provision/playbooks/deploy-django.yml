@@ -20,7 +20,7 @@
     - name: Controller host configuration
       ansible.builtin.debug:
         msg:
-        - "dns domain: {{ instance_dns_domain }}"
+        - "dns domain: {{ aws.instance.admin.dns.domain }}"
         - "ssh port: {{ ansible_port }}"
         - "ssh user: {{ ansible_user }}"
         - "ssh key: {{ ansible_ssh_private_key_file }}"
@@ -34,7 +34,7 @@
         state: absent       
                   
   tasks:
-  
+   
     - name: Create download directory
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
@@ -180,16 +180,27 @@
         daemon_reload: true
         name: nginx
     
-    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+    - name: 'Test it: https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}/admin'
       become: false  
       ansible.builtin.uri:
-        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+        url: 'https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}/admin'
         method: GET
         status_code: 200
         validate_certs: false
         return_content: true
       register: result
       failed_when: "'Django site admin' not in result.content"    
+      
+    - name: 'Test it: https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}'
+      become: false  
+      ansible.builtin.uri:
+        url: 'https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}'
+        method: GET
+        status_code: 200
+        validate_certs: false
+        return_content: true
+      register: result
+      failed_when: "'Message board posts' not in result.content"          
       
     - name: Check Django admin app superuser exists
       community.general.django_manage:

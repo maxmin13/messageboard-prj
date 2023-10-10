@@ -49,7 +49,7 @@ aws:
       https:
         port: "8443"            
     project:
-      name: "{{ project_name }}"
+      name: "{{ django_project_name }}"
       dir:
         path: "{{ project_dir }}"
       venv:

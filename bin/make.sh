@@ -14,3 +14,4 @@ python -m venv ${PROJECT_DIR}/.venv
 source "${PROJECT_DIR}"/.venv/bin/activate
 python3 -m pip install -r "${PROJECT_DIR}"/requirements.txt
 
+deactivate

@@ -3,6 +3,6 @@
 python_version: "3.11.4"
 python_executable: "python3.11"
 project_dir: "/opt/messageboard"
-project_name: "django_project"
+django_project_name: "django_project"
 
 ...
