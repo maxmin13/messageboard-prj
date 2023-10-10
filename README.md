@@ -9,38 +9,40 @@ The webapp uses a PostgreSql database.</br>
 - Fedora 38
 - Python 3.11.4
 - ansible 2.14.5
-
-**Create the datacenter on AWS:**
-
-see project: github.com:maxmin13/datacenter-prj.git
+- aws-cli/2.13.0 configured with AWS access credentials
 
 **Clone the project:**
 
 git clone git@github.com:maxmin13/messageboard-prj.git
 
-**Upgrade all the instances and install some basic programs:**
+**Install the application:**
 
 ```
-cd provision
-ansible-playbook -b -K playbooks/upgrade.yml
+cd messageboard-prj
+cd bin
+
+./install.exp awsadmin
 ```
 
-**Create the database:**
+**Delete the application:**
 
 ```
-cd provision
-ansible-playbook -b -K playbooks/postgresql.yml
-```
+cd messageboard-prj
+cd bin
 
-**Install Gunicorn and deploy the Django project:**
-
-```
-cd provision
-ansible-playbook -b -K playbooks/deploy-django.yml
+./delete.exp awsadmin
 ```
 
 **Access Django admin site at:**
 
 https://admin.maxmin.it:8443/admin
+
+userid: admin
+password: admin
+
+
+**Access the messageboard app at:**
+
+https://admin.maxmin.it:8443
 
 <br>
