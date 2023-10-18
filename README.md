@@ -1,36 +1,45 @@
 # AWS messageboard project
 
-Ansible playbooks to deploy a Django project to the AWS cloud.</br>
-The Django webapp runs on Gunicorn application server with Nginx reverse proxy.</br>
-The webapp uses a PostgreSql database.</br>
+The project deploys a Django web application to the AWS cloud,</br>
+on Gunicorn application server and Nginx reverse proxy.</br>
+The store is a PostgreSql database.</br>
 
 **Requirements:**
 
 - Fedora 38
 - Python 3.11.4
 - ansible 2.14.5
-- aws-cli/2.13.0 configured with AWS access credentials
+- aws-cli/2.13.0
 
 **Clone the project:**
 
 git clone git@github.com:maxmin13/messageboard-prj.git
 
-**Install the application:**
+
+**Configure the AWS credentials and default region on the controller machine:**
+
+```
+aws configure
+```
+
+**Configure the project:**
+
+edit ** datacenter.json ** and ** hostedzone.json ** and set the Vpc and DNS values accourding to your AWS account: <br>
+
+* VPC CIDR (eg: "Cidr": "10.0.0.0/16")<br>
+* VPC region (eg: "Region": "eu-west-1")<br>
+* Availability zone (eg: "Az": "eu-west-1a")<br>
+* Subnet CIDR (eg: "Cidr": "10.0.20.0/24")<br>
+* admin instance private IP (eg: "PrivateIp": "10.0.20.35")<br>
+* DNS registered domain (eg: "RegisteredDomain": "maxmin.it")<br>
+
+**Install the web application:**
 
 ```
 cd messageboard-prj
 cd bin
 
 ./install.exp awsadmin
-```
-
-**Delete the application:**
-
-```
-cd messageboard-prj
-cd bin
-
-./delete.exp awsadmin
 ```
 
 **Access Django admin site at:**
@@ -41,8 +50,18 @@ userid: admin
 password: admin
 
 
-**Access the messageboard app at:**
+**Access the messageboard webapp at:**
 
 https://admin.maxmin.it:8443
+
+
+**Delete the application:**
+
+```
+cd messageboard-prj
+cd bin
+
+./delete.exp awsadmin
+```
 
 <br>

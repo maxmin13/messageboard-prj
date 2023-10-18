@@ -1,4 +1,4 @@
-- name: Deploys messagebord apps
+- name: Deploy messagebord app
   hosts:
     - class_cms
     
@@ -8,6 +8,7 @@
     - variables/vars.yml
     - variables/aws.yml
     - variables/secrets.yml
+    - variables/datacenter.json
     
   handlers:
     - name: 'Restart nginx'
@@ -20,15 +21,7 @@
         state: restarted   
          
   pre_tasks:
-      
-    - name: Controller host configuration
-      ansible.builtin.debug:
-        msg:
-        - "dns domain: {{ aws.instance.admin.dns.domain }}"
-        - "ssh port: {{ ansible_port }}"
-        - "ssh user: {{ ansible_user }}"
-        - "ssh key: {{ ansible_ssh_private_key_file }}"
-  
+        
     - name: Upgrade all packages
       ansible.builtin.yum: name=* state=latest 
                  
@@ -112,10 +105,10 @@
         daemon_reload: true
         name: nginx
     
-    - name: 'Test it: https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}'
+    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
       become: false  
       ansible.builtin.uri:
-        url: 'https://{{ aws.instance.admin.dns.domain }}:{{ aws.instance.nginx.https.port }}'
+        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
         method: GET
         status_code: 200
         validate_certs: false

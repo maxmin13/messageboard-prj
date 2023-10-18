@@ -1,4 +1,4 @@
-- name: Installs common programs
+- name: Install common programs
   hosts:
     - all
   gather_facts: false
@@ -7,17 +7,10 @@
     - variables/vars.yml
     - variables/aws.yml
     - variables/secrets.yml
+    - variables/datacenter.json
     
   pre_tasks:
-      
-    - name: 'Controller host configuration (magic variables)'
-      ansible.builtin.debug:
-        msg:
-        - "domain: {{ instance_dns_domain }}"
-        - "ssh port: {{ ansible_port }}"
-        - "ssh user: {{ ansible_user }}"
-        - "ssh key: {{ ansible_ssh_private_key_file }}"
-    
+
   tasks:
     - name: update yum cache
       ansible.builtin.yum: update_cache=true

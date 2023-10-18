@@ -4,14 +4,7 @@ aws:
   instance: 
     download:
       dir:
-        path: /opt/download  
-    admin:
-      user: "awsadmin"
-      ssh:
-        key:
-          path: /home/vagrant/workspace/datacenter-prj/access/admin-key
-      dns:
-        domain: admin.maxmin.it
+        path: /opt/download    
     python:
       install:
         dir:
