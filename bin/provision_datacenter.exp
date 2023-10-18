@@ -1,0 +1,56 @@
+#!/usr/bin/expect -f
+
+##
+## Provisions an AWS datacenter running the scripts in git@github.com:maxmin13/datacenter-prj.git project.
+##
+## run:
+##
+## ./provision_datacenter.exp awsadmin
+##
+
+# get the password from the command line.
+set password [lindex $argv 0]
+set DATACENTER_PROJECT_DIR "$env(DATACENTER_PROJECT_DIR)"
+set ansible_playbook_cmd "$env(DATACENTER_PROJECT_DIR)/.venv/bin/ansible-playbook"
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/upgrade.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/openssl.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/python.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+# Install postgresql server
+spawn ${ansible_playbook_cmd} -b -K playbooks/postgresql.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/nginx.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+

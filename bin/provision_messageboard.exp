@@ -1,0 +1,39 @@
+#!/usr/bin/expect -f
+
+##
+## Installs messageboard application on AWS from the repository git@github.com:maxmin13/messageboard-prj.git .
+##
+## run:
+##
+## ./provision_messageboard.exp awsadmin
+##
+
+# get the password from the command line.
+set password [lindex $argv 0]
+set MESSAGEBOARD_PROJECT_DIR "$env(MESSAGEBOARD_PROJECT_DIR)"
+set ansible_playbook_cmd "$env(MESSAGEBOARD_PROJECT_DIR)/.venv/bin/ansible-playbook"
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/upgrade.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/postgresql.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
+spawn ${ansible_playbook_cmd} -b -K playbooks/deploy-django.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${password}\r"
+
+expect eof
+catch wait result
+
