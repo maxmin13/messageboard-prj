@@ -39,7 +39,7 @@ edit ** datacenter.json ** and ** hostedzone.json ** and set the Vpc and DNS val
 cd messageboard-prj
 cd bin
 
-./install.exp awsadmin
+./make.sh
 ```
 
 **Access Django admin site at:**
@@ -61,7 +61,7 @@ https://admin.maxmin.it:8443
 cd messageboard-prj
 cd bin
 
-./delete.exp awsadmin
+./delete.sh
 ```
 
 <br>
