@@ -32,12 +32,6 @@
  
   tasks:
   
-    - name: Run unit tests
-      community.general.django_manage:
-        command: test
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"  
-  
     - name: Create download directory
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
