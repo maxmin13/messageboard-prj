@@ -43,7 +43,7 @@ chmod +x make.sh
 ./make.sh
 ```
 
-**Login in the remote instance:**
+**Log in the remote instance:**
 
 ```
 cd datacenter-prj/access
