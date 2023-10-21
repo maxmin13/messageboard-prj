@@ -16,7 +16,7 @@ The store is a PostgreSql database.</br>
 git clone git@github.com:maxmin13/messageboard-prj.git
 
 
-**Configure the AWS credentials and default region on the controller machine:**
+**Configure the AWS credentials and default region in the controller machine:**
 
 ```
 aws configure
@@ -36,12 +36,14 @@ edit ** datacenter.json ** and ** hostedzone.json ** and set the Vpc and DNS val
 **Install the web application:**
 
 ```
-cd messageboard-prj/bin
+export REMOTE_USER_PASSWORD=<instance remoter user pwd, eg: awsadmin>
 
+cd messageboard-prj/bin
+chmod +x make.sh
 ./make.sh
 ```
 
-**Log in the remote instance:**
+**Login in the remote instance:**
 
 ```
 cd datacenter-prj/access
@@ -62,13 +64,13 @@ password: admin
 https://msg.maxmin.it:8443
 
 
-**Delete the application:**
+**Delete the datacenter and the application:**
 
 ```
 cd messageboard-prj
 cd bin
 
-./delete.sh awsadmin
+./delete.sh
 ```
 
 <br>

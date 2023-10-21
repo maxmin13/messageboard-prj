@@ -19,9 +19,9 @@ export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 export DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
 export PYTHONPATH="${MESSAGEBOARD_PROJECT_DIR}"/src
 
-if [ "${#}" -eq 0 ]
+if [[ ! -v REMOTE_USER_PASSWORD ]]
 then
-  echo "Error: enter remote instance user password."
+  echo "ERROR: environment variable REMOTE_USER_PASSWORD not set!"
   exit 1
 fi
 
