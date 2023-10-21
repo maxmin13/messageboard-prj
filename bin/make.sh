@@ -1,13 +1,14 @@
 #!/bin/bash 
 # shellcheck disable=SC1091
 
-########################################################################
+############################################################################
 # The script creates a datacenter on AWS and installs a web application
 #
 # run:
-# ./make.sh <remote instance user password, ex. awsadmin>
+#    export REMOTE_USER_PASSWORD=<instance remoter user pwd, eg: awsadmin>
+#    ./make.sh
 #
-########################################################################
+############################################################################
 
 set -o errexit
 set -o pipefail
@@ -25,10 +26,10 @@ then
   exit 1
 fi
 
-echo "WORKSPACE_DIR: ${WORKSPACE_DIR}"
-echo "MESSAGEBOARD_PROJECT_DIR: ${MESSAGEBOARD_PROJECT_DIR}"
-echo "DATACENTER_PROJECT_DIR: ${DATACENTER_PROJECT_DIR}"
-echo "PYTHONPATH: ${PYTHONPATH}"
+# echo "WORKSPACE_DIR: ${WORKSPACE_DIR}"
+# echo "MESSAGEBOARD_PROJECT_DIR: ${MESSAGEBOARD_PROJECT_DIR}"
+# echo "DATACENTER_PROJECT_DIR: ${DATACENTER_PROJECT_DIR}"
+# echo "PYTHONPATH: ${PYTHONPATH}"
 
 ######################
 # DATACENTER PROJECT #
@@ -54,12 +55,12 @@ fi
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
 chmod 755 make.sh
-############################################# ./make.sh
+./make.sh
 
 echo "Datacenter created."
 
 chmod 755 provision.exp
-################################################ ./provision.exp
+./provision.exp
 
 echo "Datacenter provisioned."
 
