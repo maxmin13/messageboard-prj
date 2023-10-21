@@ -29,8 +29,8 @@ SECRET_KEY = (
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["admin.maxmin.it", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://admin.maxmin.it"]
+ALLOWED_HOSTS = ["msg.maxmin.it", "localhost"]
+CSRF_TRUSTED_ORIGINS = ["http://msg.maxmin.it"]
 
 # Application definition
 

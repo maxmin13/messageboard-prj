@@ -1,7 +1,7 @@
 # AWS messageboard project
 
 The project deploys a Django web application to the AWS cloud,</br>
-on Gunicorn application server and Nginx reverse proxy.</br>
+with Gunicorn application server and Nginx reverse proxy.</br>
 The store is a PostgreSql database.</br>
 
 **Requirements:**
@@ -36,15 +36,22 @@ edit ** datacenter.json ** and ** hostedzone.json ** and set the Vpc and DNS val
 **Install the web application:**
 
 ```
-cd messageboard-prj
-cd bin
+cd messageboard-prj/bin
 
 ./make.sh
 ```
 
+**Log in the remote instance:**
+
+```
+cd datacenter-prj/access
+rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote instance IP address>
+
+```
+
 **Access Django admin site at:**
 
-https://admin.maxmin.it:8443/admin
+https://msg.maxmin.it:8443/admin
 
 userid: admin
 password: admin
@@ -52,7 +59,7 @@ password: admin
 
 **Access the messageboard webapp at:**
 
-https://admin.maxmin.it:8443
+https://msg.maxmin.it:8443
 
 
 **Delete the application:**
@@ -61,7 +68,7 @@ https://admin.maxmin.it:8443
 cd messageboard-prj
 cd bin
 
-./delete.sh
+./delete.sh awsadmin
 ```
 
 <br>

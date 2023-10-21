@@ -1,0 +1,90 @@
+#!/usr/bin/expect -f
+
+##
+## Installs the messageboard application on an AWS datacenter.
+##
+## run:
+##
+## export MESSAGEBOARD_PROJECT_DIR=<path to the project directory>
+## export REMOTE_USER_PASSWORD=awsadmin
+##
+## ./provision.exp 
+##
+
+#################################
+## AWS datacenter Provisioning ##
+#################################
+
+set MESSAGEBOARD_PROJECT_DIR "$env(MESSAGEBOARD_PROJECT_DIR)"
+set REMOTE_USER_PASSWORD "$env(REMOTE_USER_PASSWORD)"
+set ANSIBLE_PLAYBOOK_CMD "${MESSAGEBOARD_PROJECT_DIR}/.venv/bin/ansible-playbook"
+
+cd ${MESSAGEBOARD_PROJECT_DIR}/provision
+
+########################
+##### UPDATE SYSTEM ####
+########################
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/upgrade.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${REMOTE_USER_PASSWORD}\r"
+
+expect eof
+catch wait result
+set exit_code "[lindex $result 3]"
+
+# puts "$exit_code\n"
+
+if {$exit_code > 0} {
+    puts "Error: upgrading system.\n"
+    exit $exit_code
+}
+
+puts "System upgraded.\n"
+
+#####################
+##### POSTGRESQL ####
+#####################
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/postgresql.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${REMOTE_USER_PASSWORD}\r"
+
+expect eof
+catch wait result
+set exit_code "[lindex $result 3]"
+
+# puts "$exit_code\n"
+
+if {$exit_code > 0} {
+    puts "Error: creating postgresql database.\n"
+    exit $exit_code
+}
+
+puts "Postgresql database installed.\n"
+
+#################
+##### DJANGO ####
+#################
+
+spawn ${ANSIBLE_PLAYBOOK_CMD} -b -K playbooks/deploy-django.yml
+match_max 100000
+expect -exact "BECOME password: "
+send -- "${REMOTE_USER_PASSWORD}\r"
+
+expect eof
+catch wait result
+set exit_code "[lindex $result 3]"
+
+# puts "$exit_code\n"
+
+if {$exit_code > 0} {
+    puts "Error: deploying Django.\n"
+    exit $exit_code
+}
+
+puts "Django deployed.\n"
+
+puts "Messageboard application deployed.\n"
