@@ -1,6 +1,14 @@
 #!/bin/bash 
 # shellcheck disable=SC1091
 
+############################################################################
+# The script deletes the datacenter on AWS.
+#
+# run:
+#    ./delete.sh
+#
+############################################################################
+
 set -o errexit
 set -o pipefail
 set -o nounset

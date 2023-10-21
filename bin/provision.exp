@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 
-##
+###########################################################################
 ## Installs the messageboard application on an AWS datacenter.
 ##
 ## run:
@@ -10,6 +10,7 @@
 ##
 ## ./provision.exp 
 ##
+###########################################################################
 
 #################################
 ## AWS datacenter Provisioning ##
