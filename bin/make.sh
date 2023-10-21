@@ -58,6 +58,7 @@ chmod 755 make.sh
 ./make.sh
 
 echo "Datacenter created."
+echo "Provisioning datacenter instance ..."
 
 chmod 755 provision.exp
 ./provision.exp
@@ -79,7 +80,9 @@ echo "Messageboard virtual environment created."
 
 cd "${MESSAGEBOARD_PROJECT_DIR}"/bin
 
+echo "Installing messageboard application ..."
+
 chmod 755 provision.exp
 ./provision.exp
 
-echo "Messageboard application deployed."
+echo "Messageboard application installed."
