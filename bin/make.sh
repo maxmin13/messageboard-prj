@@ -37,10 +37,6 @@ fi
 # DATACENTER PROJECT #
 ######################
 
-# override the default configuration files in datacenter-prj.
-cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
-cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
-
 echo "Datacenter project config files set."
 
 cd "${WORKSPACE_DIR}"
@@ -53,6 +49,10 @@ then
 else
   echo "Datacenter project already cloned."
 fi
+
+# override the default configuration files in datacenter-prj.
+cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
+cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
