@@ -36,10 +36,12 @@ edit **datacenter.json** and **hostedzone.json** and set the Vpc and DNS values 
 **Install the web application:**
 
 ```
-export REMOTE_USER_PASSWORD=<instance remoter user pwd, eg: awsadmin>
+export REMOTE_USER=<remote instance user, eg: awsadmin>
+export REMOTE_USER_PASSWORD=<remote instance user pwd, eg: awsadmin>
 
 cd messageboard-prj/bin
 chmod +x make.sh
+
 ./make.sh
 ```
 
@@ -47,6 +49,7 @@ chmod +x make.sh
 
 ```
 cd datacenter-prj/access
+
 rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote instance IP address>
 
 ```
@@ -67,10 +70,10 @@ https://msg.maxmin.it:8443
 **Delete the datacenter and the application:**
 
 ```
-cd messageboard-prj
-cd bin
+cd messageboard-prj/bin
 
 ./delete.sh
+
 ```
 
 <br>

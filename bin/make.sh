@@ -5,7 +5,9 @@
 # The script creates a datacenter on AWS and installs a web application
 #
 # run:
-#    export REMOTE_USER_PASSWORD=<instance remoter user pwd, eg: awsadmin>
+#    export REMOTE_USER=<remote instance user, eg: awsadmin>
+#    export REMOTE_USER_PASSWORD=<remote instance user pwd, eg: awsadmin>
+#
 #    ./make.sh
 #
 ############################################################################
@@ -20,16 +22,16 @@ export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 export DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
 export PYTHONPATH="${MESSAGEBOARD_PROJECT_DIR}"/src
 
+if [[ ! -v REMOTE_USER ]]
+then
+  echo "ERROR: environment variable REMOTE_USER not set!"
+  exit 1
+fi
 if [[ ! -v REMOTE_USER_PASSWORD ]]
 then
   echo "ERROR: environment variable REMOTE_USER_PASSWORD not set!"
   exit 1
 fi
-
-# echo "WORKSPACE_DIR: ${WORKSPACE_DIR}"
-# echo "MESSAGEBOARD_PROJECT_DIR: ${MESSAGEBOARD_PROJECT_DIR}"
-# echo "DATACENTER_PROJECT_DIR: ${DATACENTER_PROJECT_DIR}"
-# echo "PYTHONPATH: ${PYTHONPATH}"
 
 ######################
 # DATACENTER PROJECT #
@@ -49,7 +51,7 @@ then
 
   echo "Datacenter project cloned."
 else
-    echo "Datacenter project already cloned."
+  echo "Datacenter project already cloned."
 fi
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
@@ -57,11 +59,10 @@ cd "${DATACENTER_PROJECT_DIR}"/bin
 chmod 755 make.sh
 ./make.sh
 
-echo "Datacenter created."
-echo "Provisioning datacenter instance ..."
+echo "Datacenter created, provisioning instance."
 
-chmod 755 provision.exp
-./provision.exp
+chmod 755 provision.sh
+./provision.sh
 
 echo "Datacenter provisioned."
 
@@ -82,7 +83,7 @@ cd "${MESSAGEBOARD_PROJECT_DIR}"/bin
 
 echo "Installing messageboard application ..."
 
-chmod 755 provision.exp
-./provision.exp
+chmod 755 provision.sh
+./provision.sh
 
 echo "Messageboard application installed."

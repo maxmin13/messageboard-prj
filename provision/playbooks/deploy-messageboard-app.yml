@@ -1,4 +1,4 @@
-- name: Deploy messagebord app
+- name: Deploy messageboard app
   hosts:
     - class_cms
     
@@ -21,9 +21,18 @@
         state: restarted   
          
   pre_tasks:
+  
+    - name: 'Controller host configuration'
+      ansible.builtin.debug:
+        msg:
+        - "domain: {{ instance_dns_domain }}"
+        - "ssh port: {{ ansible_port }}"
+        - "ssh user: {{ ansible_user }}"
+        - "ssh key: {{ ansible_private_key_file }}"  
         
-    - name: Upgrade all packages
-      ansible.builtin.yum: name=* state=latest 
+#    - name: Upgrade all packages
+#      become: true
+#      ansible.builtin.yum: name=* state=latest 
                  
     - name: Delete download directory
       ansible.builtin.file:
@@ -33,6 +42,7 @@
   tasks:
   
     - name: Create download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: directory
@@ -87,13 +97,13 @@
         project_path: "{{ aws.instance.project.dir.path }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
        
-    - name: Restart gunicorn 
+    - name: Restart Gunicorn 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
         name: gunicorn
       
-    - name: Restart nginx 
+    - name: Restart Nginx 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
@@ -113,6 +123,7 @@
   post_tasks:
   
     - name: Delete download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: absent 

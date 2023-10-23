@@ -1,4 +1,4 @@
-- name: Deploys Django framework
+- name: Deploy Django framework
   hosts:
     - class_cms
     
@@ -11,17 +11,27 @@
     - variables/datacenter.json
     
   handlers:
-    - name: 'Restart nginx'
+    - name: 'Restart Nginx'
       ansible.builtin.service:
         name: nginx
         state: restarted    
  
   pre_tasks:
   
-    - name: Upgrade all packages
-      ansible.builtin.yum: name=* state=latest 
+    - name: 'Controller host configuration'
+      ansible.builtin.debug:
+        msg:
+        - "domain: {{ instance_dns_domain }}"
+        - "ssh port: {{ ansible_port }}"
+        - "ssh user: {{ ansible_user }}"
+        - "ssh key: {{ ansible_private_key_file }}"  
+  
+#    - name: Upgrade all packages
+#      become: true
+#      ansible.builtin.yum: name=* state=latest 
       
     - name: Delete download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: absent       
@@ -29,6 +39,7 @@
   tasks:
    
     - name: Create download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: directory
@@ -37,6 +48,7 @@
         mode: 488   
    
     - name: Create virtualenv
+      become: true
       ansible.builtin.pip:
         name:
           - pip
@@ -53,16 +65,56 @@
         mode: '0644'
 
     - name: Install required packages
+      become: true
       ansible.builtin.pip:
-        virtualenv: "{{ aws.instance.project.venv.dir.path  }}"
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"
+
+    - name: Install psycopg2 for ansible to be able to create postgresql users
+      become: true
+      pip: name=psycopg2-binary
+      
+    - name: 'Create database user'
+      become: true
+      become_user: postgres       
+      community.general.postgresql_user:
+        state: present
+        name: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        password: "{{ aws.instance.postgresql.database.user.admin.password }}"
+     
+    - name: 'Create the database'
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ aws.instance.postgresql.database.name }}"
+        owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        encoding: UTF8
+   
+    - name: 'Grant user access'
+      become: true
+      become_user: postgres      
+      community.general.postgresql_privs:
+        type: database
+        database: "{{ aws.instance.postgresql.database.name }}"
+        roles: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        grant_option: no
+        privs: all  
+
+    - name: 'Restart Postgresql services'
+      become: true
+      ansible.builtin.service:
+        name: postgresql-14
+        state: restarted
+        enabled: true         
  
     - name: Delete download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: absent 
         
     - name: Create download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: directory
@@ -80,16 +132,19 @@
         update: false
  
     - name: Delete project directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.project.dir.path }}"
         state: absent 
         
     - name: Create project directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.project.dir.path }}"
         state: directory               
  
     - name: Move project files
+      become: true
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/manage.py"
@@ -106,68 +161,77 @@
         DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
 
     - name: Collect static files
+      become: true
       community.general.django_manage:
         command: collectstatic
         project_path: "{{ aws.instance.project.dir.path }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         
     - name: Django environment file
+      become: true
       ansible.builtin.template:
         src: django/env.j2
         dest: "{{ aws.instance.project.dir.path }}/.env"
         mode: 0400          
         
-    - name: Remove the nginx config file
+    - name: Remove the Nginx config file
       become: true
       ansible.builtin.file:
         path: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
         state: absent
 
     - name: Deploy Nginx config file
+      become: true
       ansible.builtin.template:
         src: nginx/nginx.conf.j2
         dest: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
         mode: 0400
-      notify: Restart nginx  
       
     - name: Gunicorn socket config file
+      become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.socket.j2
         dest: "/etc/systemd/system/gunicorn.socket"
         mode: 0400 
         
     - name: Gunicorn service file
+      become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.service.j2
         dest: "/etc/systemd/system/gunicorn.service"
         mode: 0400                       
         
-    - name: Create gunicorn directory
+    - name: Create Gunicorn directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.gunicorn.config.dir.path }}"
         state: directory         
    
     - name: Gunicorn config file
+      become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.conf.py.j2
         dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py"
         mode: 0400  
         
-    - name: Start gunicorn socket 
+    - name: Start Gunicorn socket
+      become: true 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
         enabled: true
         name: gunicorn.socket
       
-    - name: Start gunicorn 
+    - name: Start Gunicorn
+      become: true 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
         enabled: true
         name: gunicorn
    
-    - name: Restart nginx 
+    - name: Restart Nginx
+      become: true 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
@@ -196,6 +260,7 @@
       failed_when: "'Message board posts' not in result.content"          
       
     - name: Check Django admin app superuser exists
+      become: true
       community.general.django_manage:
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         project_path: "{{ aws.instance.project.dir.path }}"
@@ -205,6 +270,7 @@
       changed_when: False      
 
     - name: Create Django admin app superuser
+      become: true
       community.general.django_manage:
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         project_path: "{{ aws.instance.project.dir.path }}"
@@ -218,6 +284,7 @@
   post_tasks:
   
     - name: Delete download directory
+      become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
         state: absent 
