@@ -71,7 +71,6 @@ https://msg.maxmin.it:8443
 
 ```
 cd messageboard-prj/bin
-
 chmod +x delete.sh
 
 ./delete.sh
