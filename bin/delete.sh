@@ -51,7 +51,7 @@ fi
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
 chmod 755 delete.sh
-#./delete.sh
+./delete.sh
 
 cd "${WORKSPACE_DIR}"
 
