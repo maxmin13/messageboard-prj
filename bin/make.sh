@@ -37,8 +37,6 @@ fi
 # DATACENTER PROJECT #
 ######################
 
-echo "Datacenter project config files set."
-
 cd "${WORKSPACE_DIR}"
 
 if [[ ! -d "${DATACENTER_PROJECT_DIR}" ]]
@@ -53,6 +51,8 @@ fi
 # override the default configuration files in datacenter-prj.
 cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
 cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
+
+echo "Datacenter project config files set."
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
@@ -86,4 +86,13 @@ echo "Installing messageboard application ..."
 chmod 755 provision.sh
 ./provision.sh
 
-echo "Messageboard application installed."
+cd "${WORKSPACE_DIR}"
+
+if [[ -d datacenter-prj ]]
+then
+  rm -rf datacenter-prj
+fi
+  
+echo "Messageboard application installed."  
+  
+  
