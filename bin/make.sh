@@ -90,7 +90,7 @@ cd "${WORKSPACE_DIR}"
 
 if [[ -d datacenter-prj ]]
 then
-  rm -rf datacenter-prj
+  rm -rf datacenter-prj/
 fi
   
 echo "Messageboard application installed."  
