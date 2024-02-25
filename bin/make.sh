@@ -1,16 +1,17 @@
 #!/bin/bash 
 # shellcheck disable=SC1091
 
-############################################################################
-# The script creates a datacenter on AWS and installs a web application
+##############################################################################
+# The script creates a datacenter on AWS and installs the messageboard
+# Django application.
 #
 # run:
-#    export REMOTE_USER=<remote instance user, eg: awsadmin>
-#    export REMOTE_USER_PASSWORD=<remote instance user pwd, eg: awsadmin>
+#    export REMOTE_USER=<AWS remote instance user, eg: awsadmin>
+#    export REMOTE_USER_PASSWORD=<AWS remote instance user pwd, eg: awsadmin>
 #
 #    ./make.sh
 #
-############################################################################
+##############################################################################
 
 set -o errexit
 set -o pipefail
@@ -33,9 +34,9 @@ then
   exit 1
 fi
 
-######################
-# DATACENTER PROJECT #
-######################
+#######################################
+# DATACENTER ENVIRONMENT AND INSTANCE #
+#######################################
 
 cd "${WORKSPACE_DIR}"
 
@@ -66,9 +67,9 @@ chmod 755 provision.sh
 
 echo "Datacenter provisioned."
 
-########################
-# MESSAGEBOARD PROJECT #
-########################
+###########################
+# MESSAGEBOARD DJANGO APP #
+###########################
 
 {
     python -m venv "${MESSAGEBOARD_PROJECT_DIR}"/.venv
