@@ -33,7 +33,7 @@ fi
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
-ANSIBLE_PLAYBOOK_CMD="${DATACENTER_PROJECT_DIR}"/.venv/bin/ansible-playbook
+ANSIBLE_PLAYBOOK_CMD="${MESSAGEBOARD_PROJECT_DIR}"/.venv/bin/ansible-playbook
 
 ########################
 ##### UPDATE SYSTEM ####
