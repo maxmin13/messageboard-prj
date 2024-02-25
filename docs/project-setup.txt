@@ -86,12 +86,21 @@ git push origin master
 # local server
 ###########################
 
+# run a local server
+
 cd messageboard-prj
 
 python manage.py migrate
+python manage.py createsuperuser --username=admin --email=admin@gmail.com
 python manage.py runserver
 
-http://127.0.0.1:8000/admin
+# access Django admin console and from there the Post web application, create some posts
+http://localhost:8000/admin
+admin
+admin
+
+# load the posts in the Post web application
+http://localhost:8000/
 
 ########
 # Tests
