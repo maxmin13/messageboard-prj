@@ -1,6 +1,8 @@
 
+how to create a new Django project and deploly to Aws
+
 ##################################
-# First setup of a Djanog project
+# First setup of a Django project
 ##################################
 
 mkdir messageboard-prj
@@ -21,6 +23,7 @@ python -m pip install "psycopg2-binary"~=2.9.0
 python -m pip install whitenoise~=6.5.0
 python -m pip install dj-database-url~=2.0.0
 
+# freeze the libs in a requirement.txt
 python -m pip freeze > provision/playbooks/files/admin/requirements.txt
 
 ## Development software:
@@ -42,7 +45,7 @@ install eclipse pydev plugin from marketplace.
 File/New/Project (not PyDev project)
 Choose General/Project, click Next
 Enter a project name
-Un-check "use default location" and set the location to the top directory of my project
+Un-check "use default location" and set the location to the top directory of my messageboard-prj
 Click Finish
 
 menu Window, preferences, PDev, Python Interpreter,
@@ -83,6 +86,8 @@ git push origin master
 # local server
 ###########################
 
+cd messageboard-prj
+
 python manage.py migrate
 python manage.py runserver
 
@@ -98,29 +103,9 @@ python manage.py test
 # Deployment
 #############
 
-1) create a virtual environment for production.
+1) the production requirements.txt file is already been created above.
 
-cd messageboard-prj
-python -m venv ".temp_venv"
-source .temp_venv/bin/activate
-
-2) install Django
-
-python -m pip install Django~=4.2.0
-
-3) Install Gunicorn as a WSGI server 
-
-python -m pip install gunicorn~=20.1.0
-
-4) Install Psycopg to connect with a PostgreSQL database
-
-python -m pip install "psycopg[binary]"~=3.1.0
-
-5) Install environs for environment variables
-
-python -m pip install "environs[django]"~=9.5.0
-
-6) Update DATABASES in django_project/settings.py
+2) Update DATABASES in django_project/settings.py
 
         from environs import Env
         
@@ -131,11 +116,11 @@ python -m pip install "environs[django]"~=9.5.0
             "default": env.dj_db_url("DATABASE_URL", default="sqlite:///db.sqlite3"),
         }
 
-7) Initialize database:
+3) Initialize database:
         
    python manage.py migrate
     
-8) Static files in production
+4) Static files in production
 
 python -m pip install whitenoise~=6.4.0
 
@@ -170,23 +155,18 @@ python -m pip install whitenoise~=6.4.0
 
 python manage.py collectstatic
 
-9) generate a requirements.txt file 
 
-cd messageboard-prj
-python -m pip freeze > provision/playbooks/files/admin/requirements.txt
-deactivate
-rm -rf .temp_venv   
 
-10) update update ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, DEBUG, and SECRET_KEY in django_project/settings.py
+5) update update ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, DEBUG, and SECRET_KEY in django_project/settings.py
 
         # list of the host/domain names that our Django website can serve.
         ALLOWED_HOSTS = ["*"]
         
         CSRF_TRUSTED_ORIGINS = ["https://admin.maxmin.it"]
         
-##########
-# pgAdmin
-##########
+###########################################
+# pgAdmin (Postgress management tool)
+###########################################
 
 right click on Servers
 Register, Server
