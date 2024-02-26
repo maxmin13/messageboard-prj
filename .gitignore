@@ -17,3 +17,4 @@ __pycache__/
 .dbeaver
 .venv/
 *.sqlite3
+access/
