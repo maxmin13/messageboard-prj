@@ -89,6 +89,8 @@ git push origin master
 # run a local server
 
 cd messageboard-prj
+source .venv/bin/activate
+cd project
 
 python manage.py migrate
 python manage.py createsuperuser --username=admin --email=admin@gmail.com
@@ -163,8 +165,6 @@ python -m pip install whitenoise~=6.4.0
         STATIC_ROOT = BASE_DIR / "staticfiles"
 
 python manage.py collectstatic
-
-
 
 5) update update ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, DEBUG, and SECRET_KEY in django_project/settings.py
 
