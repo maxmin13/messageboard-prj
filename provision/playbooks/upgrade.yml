@@ -7,7 +7,7 @@
     - variables/vars.yml
     - variables/aws.yml
     - variables/secrets.yml
-    - variables/datacenter.json
+    - "{{ lookup('ansible.builtin.env', 'DATACENTER_PROJECT_DIR') }}/config/datacenter.json"
     
   pre_tasks:
   
