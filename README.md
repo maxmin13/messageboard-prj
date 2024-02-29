@@ -31,13 +31,13 @@ edit **datacenter.json** and **hostedzone.json** and set the Vpc and DNS values 
 * Availability zone (eg: "Az": "eu-west-1a")<br>
 * Subnet CIDR (eg: "Cidr": "10.0.20.0/24")<br>
 * instance private IP (eg: "PrivateIp": "10.0.20.35")<br>
-* DNS registered domain (eg: "RegisteredDomain": "maxmin.it")<br>
+* DNS registered domain (your domain registered with the AWS registrar, eg: "RegisteredDomain": "maxmin.it")<br>
 
 **Install the web application:**
 
 ```
-export REMOTE_USER=<SSH remote instance user, eg: awsadmin>
-export REMOTE_USER_PASSWORD=<SSH remote instance user pwd, eg: awsadmin>
+export REMOTE_USER=<SSH remote AWS instance user, eg: awsadmin>
+export REMOTE_USER_PASSWORD=<SSH remote AWS instance user pwd, eg: awsadmin>
 
 cd messageboard-prj/bin
 chmod +x make.sh
@@ -45,12 +45,12 @@ chmod +x make.sh
 ./make.sh
 ```
 
-**Log in the remote instance:**
+**Log in the remote AWS instance:**
 
 ```
 cd messageboard-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote instance IP address>
+rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS instance IP address>
 
 ```
 
