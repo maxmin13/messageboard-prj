@@ -21,7 +21,7 @@ set +o xtrace
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 export DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
-export PYTHONPATH="${MESSAGEBOARD_PROJECT_DIR}"/project/src ############## is it needed ???????????????????
+#####export PYTHONPATH="${MESSAGEBOARD_PROJECT_DIR}"/project/src ############## is it needed ???????????????????
 
 if [[ ! -v REMOTE_USER ]]
 then
@@ -50,8 +50,8 @@ else
 fi
 
 # override the default configuration files in datacenter-prj.
-cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
-cp "${MESSAGEBOARD_PROJECT_DIR}/provision/playbooks/variables/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
+cp "${MESSAGEBOARD_PROJECT_DIR}/config/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
+cp "${MESSAGEBOARD_PROJECT_DIR}/config/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
 
 echo "Datacenter project config files set."
 
