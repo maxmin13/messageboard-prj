@@ -9,15 +9,15 @@
     "Subnets": [
       {
         "Description": " AWS network shared by the instances.",
-        "Name": "admin-subnet",
+        "Name": "messageboard-subnet",
         "Az": "eu-west-1a",
         "Cidr": "10.0.20.0/24"
       }
     ],
     "SecurityGroups": [
       {
-        "Description": "Admin instance security group.",
-        "Name": "admin-sgp",
+        "Description": "Messageboard instance security group.",
+        "Name": "messageboard-sgp",
         "Rules": [
           {
             "FromPort": -1,
@@ -66,24 +66,23 @@
     ],
     "Instances": [
       {
-        "Name": "admin",
+        "Name": "messageboard",
         "UserName": "awsadmin",
         "UserPassword": "awsadmin",
         "PrivateIp": "10.0.20.35",
-        "SecurityGroup": "admin-sgp",
-        "Subnet": "admin-subnet",
+        "SecurityGroup": "messageboard-sgp",
+        "Subnet": "messageboard-subnet",
         "Keypair": 
             {
-                "Name": "admin-key",
-                "Path": "/home/vagrant/workspace/messageboard-prj/access"
+                "Name": "messageboard-key"
             },
         "ParentImage": "amzn2-ami-kernel-5.10-hvm-2.0.20230719.0-x86_64-gp2",
         "DnsName": "msg.maxmin.it",
-        "HostName": "admin.maxmin.it",
+        "HostName": "msg.maxmin.it",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "admin-box"
+            "Value": "messageboard-box"
           },
           {
             "Key": "Class",

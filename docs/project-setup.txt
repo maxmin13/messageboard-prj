@@ -24,6 +24,7 @@ python -m pip install whitenoise~=6.5.0
 python -m pip install dj-database-url~=2.0.0
 
 # freeze the libs in a requirement.txt
+# this requirement file will be uploaded to the AWS instance.
 python -m pip freeze > provision/playbooks/files/admin/requirements.txt
 
 ## Development software:
@@ -34,6 +35,8 @@ python -m pip install pipreqs -U # software to create requirement files
 python -m pip install Django~=4.2.0
 python -m pip install environs~=9.5.0
 
+python -m pip freeze > requirements.txt
+
 django-admin startproject django_project .
 
 ############################
@@ -42,19 +45,27 @@ django-admin startproject django_project .
 
 install eclipse pydev plugin from marketplace.
 
+select pydev perspective
+
 File/New/Project (not PyDev project)
 Choose General/Project, click Next
 Enter a project name
 Un-check "use default location" and set the location to the top directory of my messageboard-prj
 Click Finish
 
-menu Window, preferences, PDev, Python Interpreter,
-new, browse for python/pypy exe
-enter the path to the venv executable /home/vagrant/workspace/messageboard-prj/.venv/bin/python
+Open Preferences
+Go to PyDev-Interpreter/Grammar - Python interpreter
+Click 'please configure an interpreter before proceeding' link, click 'Manual config', click "New"
+select "Browse for python/pypy exe", click "cancel" to close the browse file window,
+enter a name, and the path to the python executable previously created from the command line, ex:
+/home/vagrant/workspace/messageboard-prj/.venv/bin/python3
 select all libraries
-apply and close
+Click OK
 
-Right-click on the project and select PyDev / Set as Pydev Project
+Right-click the project and select Properties
+Go to Pydev - Interpreter/Grammar
+Under Interpreter, select your new interpreter
+Click OK
 
 ############################
 # Github
