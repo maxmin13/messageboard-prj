@@ -4,25 +4,25 @@ The project deploys a Django web application to the AWS cloud,</br>
 with Gunicorn application server and Nginx reverse proxy.</br>
 The store is a PostgreSql database.</br>
 
-***Requirements:***
+##Requirements:##
 
 - Fedora 38
 - Python 3.11.4
 - ansible 2.14.5
 - aws-cli/2.13.0
 
-***Clone the project:***
+##Clone the project:##
 
 git clone git@github.com:maxmin13/messageboard-prj.git
 
 
-***Configure the AWS credentials and default region in the controller machine:***
+##Configure the AWS credentials and default region in the controller machine:##
 
 ```
 aws configure
 ```
 
-***Configure the project:***
+##Configure the project:##
 
 edit the configuration files:
 <br><br>
@@ -40,7 +40,7 @@ and set the Vpc and DNS values according to your AWS account:
 * instance private IP (eg: "PrivateIp": "10.0.20.35")<br>
 * DNS registered domain (your domain registered with the AWS registrar, eg: "RegisteredDomain": "maxmin.it")<br>
 
-***Install the web application:***
+##Install the web application:##
 
 ```
 export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
@@ -52,7 +52,7 @@ chmod +x make.sh
 ./make.sh
 ```
 
-***Log in the remote AWS instance:***
+##Log in the remote AWS instance:##
 
 ```
 cd messageboard-prj/access
@@ -61,7 +61,7 @@ rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS insta
 
 ```
 
-***Access Django admin site at:***
+##Access Django admin site at:##
 
 *https://messageboard.maxmin.it:8443/admin*
 <br>
@@ -72,14 +72,14 @@ userid: admin
 password: admin
 
 
-***Access the messageboard webapp at:***
+##Access the messageboard webapp at:##
 
 https://messageboard.maxmin.it:8443
 <br>
 *http://AWS-instance-public-IP-address:8443*
 
 
-***Delete the datacenter and the application:***
+##Delete the datacenter and the application:##
 
 ```
 cd messageboard-prj/bin
