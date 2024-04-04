@@ -1,123 +1,143 @@
 {
-   "Datacenter":{
-      "VPC":{
-         "Description":"AWS VPC",
-         "Name":"aws-datacenter",
-         "Cidr":"10.0.0.0/16",
-         "Region":"eu-west-1",
-         "Tags":[
-            {
-               "Key":"Class",
-               "Value":"webservices"
-            }
-         ]
-      },
-      "InternetGateway":{
-         "Name":"aws-gateway",
-         "Tags":[
-            {
-               "Key":"Class",
-               "Value":"webservices"
-            }
-         ]
-      },
-      "RouteTable":{
-         "Name":"aws-routetable",
-         "Tags":[
-            {
-               "Key":"Class",
-               "Value":"webservices"
-            }
-         ]
-      },
-      "Subnets":[
-         {
-            "Description":"AWS network shared by the instances.",
-            "Name":"messageboard-subnet",
-            "Az":"eu-west-1a",
-            "Cidr":"10.0.20.0/24",
-            "Tags":[
-               {
-                  "Key":"Class",
-                  "Value":"webservices"
-               }
-            ]
-         }
-      ],
-      "SecurityGroups":[
-         {
-            "Description":"Messageboard instance security group.",
-            "Name":"messageboard-sgp",
-            "Rules":[
-               {
-                  "FromPort":-1,
-                  "ToPort":-1,
-                  "Protocol":"icmp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"Ping access"
-               },
-               {
-                  "FromPort":22,
-                  "ToPort":22,
-                  "Protocol":"tcp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"SSH access"
-               },
-               {
-                  "FromPort":8080,
-                  "ToPort":8080,
-                  "Protocol":"tcp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"HTTP access"
-               },
-               {
-                  "FromPort":8443,
-                  "ToPort":8443,
-                  "Protocol":"tcp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"HTTPS access"
-               },
-               {
-                  "FromPort":5432,
-                  "ToPort":5432,
-                  "Protocol":"tcp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"PostgreSql access"
-               },
-               {
-                  "FromPort":8000,
-                  "ToPort":8000,
-                  "Protocol":"tcp",
-                  "Cidr":"0.0.0.0/0",
-                  "Description":"Gunicorn access"
-               }
-            ],
-            "Tags":[
-               {
-                  "Key":"Class",
-                  "Value":"webservices"
-               }
-            ]
-         }
-      ],
-      "Instances":[
-         {
-            "Name":"messageboard-box",
-            "UserName":"awsadmin",
-            "UserPassword":"awsadmin",
-            "PrivateIp":"10.0.20.35",
-            "SecurityGroup":"messageboard-sgp",
-            "Subnet":"messageboard-subnet",
-            "ParentImage":"amzn2-ami-kernel-5.10-hvm-2.0.20230719.0-x86_64-gp2",
-            "DnsDomain":"messageboard.maxmin.it",
-            "HostName":"messageboard.maxmin.it",
-            "Tags":[
-               {
-                  "Key":"Class",
-                  "Value":"cms"
-               }
-            ]
-         }
-      ]
-   }
+	"Datacenter": {
+		"VPC": {
+			"Description": "AWS VPC",
+			"Name": "aws-datacenter",
+			"Cidr": "10.0.0.0/16",
+			"Region": "eu-west-1",
+			"Tags": [
+				{
+					"Key": "Class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"InternetGateway": {
+			"Name": "aws-gateway",
+			"Tags": [
+				{
+					"Key": "Class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"RouteTable": {
+			"Name": "aws-routetable",
+			"Tags": [
+				{
+					"Key": "Class",
+					"Value": "webservices"
+				}
+			]
+		},
+		"Subnets": [
+			{
+				"Description": "AWS network shared by the instances.",
+				"Name": "messageboard-subnet",
+				"Az": "eu-west-1a",
+				"Cidr": "10.0.20.0/24",
+				"Tags": [
+					{
+						"Key": "Class",
+						"Value": "webservices"
+					}
+				]
+			}
+		],
+		"SecurityGroups": [
+			{
+				"Description": "Messageboard instance security group.",
+				"Name": "messageboard-sgp",
+				"Rules": [
+					{
+						"FromPort": -1,
+						"ToPort": -1,
+						"Protocol": "icmp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Ping access"
+					},
+					{
+						"FromPort": 22,
+						"ToPort": 22,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "SSH access"
+					},
+					{
+						"FromPort": 8080,
+						"ToPort": 8080,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "HTTP access"
+					},
+					{
+						"FromPort": 8443,
+						"ToPort": 8443,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "HTTPS access"
+					},
+					{
+						"FromPort": 5432,
+						"ToPort": 5432,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "PostgreSql access"
+					},
+					{
+						"FromPort": 8000,
+						"ToPort": 8000,
+						"Protocol": "tcp",
+						"Cidr": "0.0.0.0/0",
+						"Description": "Gunicorn access"
+					}
+				],
+				"Tags": [
+					{
+						"Key": "Class",
+						"Value": "webservices"
+					},
+					{
+						"Key": "Class",
+						"Value": "cms"
+					},
+					{
+						"Key": "Database",
+						"Value": "postgresql"
+					},
+					{
+						"Key": "Program",
+						"Value": "python"
+					},
+					{
+						"Key": "Security",
+						"Value": "openssl"
+					},
+					{
+						"Key": "Webserver",
+						"Value": "nginx"
+					}
+				]
+			}
+		],
+		"Instances": [
+			{
+				"Name": "messageboard-box",
+				"UserName": "awsadmin",
+				"UserPassword": "awsadmin",
+				"PrivateIp": "10.0.20.35",
+				"SecurityGroup": "messageboard-sgp",
+				"Subnet": "messageboard-subnet",
+				"ParentImage": "amzn2-ami-kernel-5.10-hvm-2.0.20230719.0-x86_64-gp2",
+				"DnsDomain": "messageboard.maxmin.it",
+				"HostName": "messageboard.maxmin.it",
+				"Tags": [
+					{
+						"Key": "Class",
+						"Value": "cms"
+					}
+				]
+			}
+		]
+	}
 }

@@ -64,7 +64,8 @@ echo "Creating datacenter ..."
 chmod 755 make.sh
 ./make.sh
 
-echo "Datacenter created, provisioning instance."
+echo "Datacenter created."
+echo "Provisioning the instance ..."
 
 chmod 755 provision.sh
 ./provision.sh
