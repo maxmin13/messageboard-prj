@@ -25,11 +25,11 @@ aws configure
 **Configure the project:**
 
 edit the configuration files:
-<br>
+<br><br>
 **config/datacenter.json** 
 <br> 
 **config/hostedzone.json** 
-<br>
+<br><br>
 and set the Vpc and DNS values according to your AWS account: 
 <br>
 
