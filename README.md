@@ -24,7 +24,14 @@ aws configure
 
 **Configure the project:**
 
-edit **config/datacenter.json** and **config/hostedzone.json** and set the Vpc and DNS values according to your AWS account: <br>
+edit the configuration files:
+<br>
+**config/datacenter.json** 
+<br> 
+**config/hostedzone.json** 
+<br>
+and set the Vpc and DNS values according to your AWS account: 
+<br>
 
 * VPC CIDR (eg: "Cidr": "10.0.0.0/16")<br>
 * VPC region (eg: "Region": "eu-west-1")<br>
