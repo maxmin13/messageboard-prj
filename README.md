@@ -61,6 +61,7 @@ rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS insta
 *http://AWS-instance-public-IP-address:8443/admin*
 
 userid: admin
+<br>
 password: admin
 
 
