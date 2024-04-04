@@ -36,8 +36,8 @@ edit **config/datacenter.json** and **config/hostedzone.json** and set the Vpc a
 **Install the web application:**
 
 ```
-export REMOTE_USER=<SSH remote AWS instance user, eg: awsadmin>
-export REMOTE_USER_PASSWORD=<SSH remote AWS instance user pwd, eg: awsadmin>
+export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
+export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
 
 cd messageboard-prj/bin
 chmod +x make.sh

@@ -5,8 +5,8 @@
 # The script deletes AWS datacenter and web application.
 #
 # run:
-#    export REMOTE_USER=<remote instance user, eg: awsadmin>
-#    export REMOTE_USER_PASSWORD=<remote instance user pwd, eg: awsadmin>
+# export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
+# export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
 #
 #    ./delete.sh
 #
@@ -18,18 +18,16 @@ set -o nounset
 set +o xtrace
   
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
-export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 export DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
-export PYTHONPATH="${MESSAGEBOARD_PROJECT_DIR}"/src
 
-if [[ ! -v REMOTE_USER ]]
+if [[ ! -v AWS_REMOTE_USER ]]
 then
-  echo "ERROR: environment variable REMOTE_USER not set!"
+  echo "ERROR: environment variable AWS_REMOTE_USER not set!"
   exit 1
 fi
-if [[ ! -v REMOTE_USER_PASSWORD ]]
+if [[ ! -v AWS_REMOTE_USER_PASSWORD ]]
 then
-  echo "ERROR: environment variable REMOTE_USER_PASSWORD not set!"
+  echo "ERROR: environment variable AWS_REMOTE_USER_PASSWORD not set!"
   exit 1
 fi
 

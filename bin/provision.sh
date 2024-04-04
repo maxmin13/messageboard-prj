@@ -7,26 +7,31 @@ set -o nounset
 set +o xtrace
 
 ###########################################################################
-## Installs the messageboard application on an AWS datacenter.
+## The script installs the messageboard application on an existing AWS 
+## datacenter using Ansible.
+## Ansible connects to the instances with SSH connection plugin.
+## Ansible uses Dynamic inventory plugin aws_ec2 to create a dynamic 
+## inventory of the AWS instances.
+## see: ansible.cfg, transport=ssh, enable_plugins = aws_ec2
 ##
 ## run:
 ##
-## export MESSAGEBOARD_PROJECT_DIR=<path to the project directory>
-## export REMOTE_USER_PASSWORD=<instance remoter user pwd, eg: awsadmin>
+## export AWS_AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
+## export AWS_AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
 ##
 ## ./provision.exp 
 ##
 ###########################################################################
 
-if [[ ! -v REMOTE_USER ]]
+if [[ ! -v AWS_REMOTE_USER ]]
 then
-  echo "ERROR: environment variable REMOTE_USER not set!"
+  echo "ERROR: environment variable AWS_REMOTE_USER not set!"
   exit 1
 fi
 
-if [[ ! -v REMOTE_USER_PASSWORD ]]
+if [[ ! -v AWS_REMOTE_USER_PASSWORD ]]
 then
-  echo "ERROR: environment variable REMOTE_USER_PASSWORD not set!"
+  echo "ERROR: environment variable AWS_REMOTE_USER_PASSWORD not set!"
   exit 1
 fi
 
@@ -43,8 +48,7 @@ echo "Upgrading the instance ..."
 
 cd "${MESSAGEBOARD_PROJECT_DIR}"/provision || exit
 
- "${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml \
-     --extra-vars "ansible_user=${REMOTE_USER} ansible_password=${REMOTE_USER_PASSWORD} ansible_sudo_pass=${REMOTE_USER_PASSWORD}"
+ "${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml
 
 echo "Instance upgraded."
 
@@ -54,8 +58,7 @@ echo "Instance upgraded."
 
 echo "Installing web application ..."
 
-"${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-django.yml \
-    --extra-vars "ansible_user=${REMOTE_USER} ansible_password=${REMOTE_USER_PASSWORD} ansible_sudo_pass=${REMOTE_USER_PASSWORD}"
+"${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-django.yml
 
 echo "Web application installed."
 echo "Messageboard application deployed."

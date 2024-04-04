@@ -1,0 +1,8 @@
+
+instance_name: "messageboard-box"
+ssh_dir: "{{ lookup('env','DATACENTER_PROJECT_DIR') }}/access"
+
+ansible_ssh_private_key_file: "{{ ssh_dir }}/{{ instance_name }}"
+ansible_user: "{{ lookup('env','AWS_REMOTE_USER') }}" 
+ansible_password: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"
+ansible_sudo_pass: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"

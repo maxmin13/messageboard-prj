@@ -6,9 +6,11 @@
   
   vars_files:
     - variables/vars.yml
-    - variables/aws.yml
-    - variables/secrets.yml
+    - variables/provision.yml
     - "{{ lookup('ansible.builtin.env', 'DATACENTER_PROJECT_DIR') }}/config/datacenter.json"
+  
+  vars:
+    instance_dns_domain: "community.general.json_query('Datacenter.Instances[?Tags[?Key==`Name` && Value==`{{ instance_name }}` ]] | [0].DnsName')"
     
   handlers:
     - name: 'Restart nginx'
