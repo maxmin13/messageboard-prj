@@ -115,22 +115,6 @@
                {
                   "Key":"Class",
                   "Value":"cms"
-               },
-               {
-                  "Key":"Database",
-                  "Value":"postgresql"
-               },
-               {
-                  "Key":"Program",
-                  "Value":"python"
-               },
-               {
-                  "Key":"Security",
-                  "Value":"openssl"
-               },
-               {
-                  "Key":"Webserver",
-                  "Value":"nginx"
                }
             ]
          }
