@@ -56,7 +56,9 @@ rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS insta
 
 **Access Django admin site at:**
 
-https://msg.maxmin.it:8443/admin
+*https://messageboard.maxmin.it:8443/admin*
+<br>
+*http://AWS-instance-public-IP-address:8443/admin*
 
 userid: admin
 password: admin
@@ -64,7 +66,9 @@ password: admin
 
 **Access the messageboard webapp at:**
 
-https://msg.maxmin.it:8443
+https://messageboard.maxmin.it:8443
+<br>
+*http://AWS-instance-public-IP-address:8443*
 
 
 **Delete the datacenter and the application:**

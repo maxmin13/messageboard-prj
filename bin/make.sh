@@ -52,6 +52,9 @@ fi
 cp "${MESSAGEBOARD_PROJECT_DIR}/config/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
 cp "${MESSAGEBOARD_PROJECT_DIR}/config/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
 
+# copy Ansible group_vars file for the message-board application
+cp "${MESSAGEBOARD_PROJECT_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_PROJECT_DIR}/provision/inventory/group_vars"
+
 echo "Datacenter project config files set."
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
@@ -70,6 +73,8 @@ echo "Datacenter provisioned."
 # MESSAGEBOARD DJANGO APP #
 ###########################
 
+echo "Installing Django message-board application ..."
+
 {
     python -m venv "${MESSAGEBOARD_PROJECT_DIR}"/.venv
     source "${MESSAGEBOARD_PROJECT_DIR}"/.venv/bin/activate
@@ -81,8 +86,6 @@ echo "Messageboard virtual environment created."
 
 cd "${MESSAGEBOARD_PROJECT_DIR}"/bin
 
-echo "Installing messageboard application ..."
-
 chmod 755 provision.sh
 ./provision.sh
 
@@ -93,6 +96,6 @@ then
   rm -rf datacenter-prj/
 fi
   
-echo "Messageboard application installed."  
+echo "Messageboard Django application installed."  
   
   
