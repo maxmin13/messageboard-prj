@@ -56,9 +56,9 @@ echo "Instance upgraded."
 ##### DJANGO ####
 #################
 
-echo "Installing web application ..."
+echo "Installing Django web application ..."
 
 "${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-django.yml
 
-echo "Web application installed."
+echo "Django web application installed."
 echo "Messageboard application deployed."

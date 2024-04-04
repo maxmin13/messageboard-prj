@@ -8,31 +8,27 @@
     - variables/vars.yml
     - variables/provision.yml
     - variables/secrets.yml
-    - "{{ lookup('ansible.builtin.env', 'DATACENTER_PROJECT_DIR') }}/config/datacenter.json"
-  
-  vars:
-    instance_dns_domain: "community.general.json_query('Datacenter.Instances[?Tags[?Key==`Name` && Value==`{{ instance_name }}` ]] | [0].DnsName')"
-    
-  handlers:
-    - name: 'Restart Nginx'
-      ansible.builtin.service:
-        name: nginx
-        state: restarted    
- 
+          
   pre_tasks:
   
+    - name: 'Get datacenter.json content'
+      set_fact:
+        datacenter_config: "{{ lookup('file', '{{ project_dir }}/config/datacenter.json') | from_json }}"
+        
+    - name: 'Get instance DNS domain'
+      set_fact:
+        instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
+      vars:
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
+
     - name: 'Controller host configuration'
       ansible.builtin.debug:
         msg:
-        - "domain: {{ instance_dns_domain }}"
+        - "instance_dns_domain: {{ instance_dns_domain }}"
         - "ssh port: {{ ansible_port }}"
         - "ssh user: {{ ansible_user }}"
-        - "ssh key: {{ ansible_private_key_file }}"  
-  
-#    - name: Upgrade all packages
-#      become: true
-#      ansible.builtin.yum: name=* state=latest 
-      
+        - "ssh key: {{ ansible_private_key_file }}"           
+       
     - name: Delete download directory
       become: true
       ansible.builtin.file:

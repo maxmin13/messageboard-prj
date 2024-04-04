@@ -59,6 +59,8 @@ echo "Datacenter project config files set."
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
+echo "Creating datacenter ..."
+
 chmod 755 make.sh
 ./make.sh
 
