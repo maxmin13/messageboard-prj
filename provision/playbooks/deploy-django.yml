@@ -73,7 +73,7 @@
       become: true
       pip: name=psycopg2-binary
       
-    - name: 'Create database user'
+    - name: Create database user
       become: true
       become_user: postgres       
       community.general.postgresql_user:
@@ -81,7 +81,7 @@
         name: "{{ aws.instance.postgresql.database.user.admin.name }}"
         password: "{{ aws.instance.postgresql.database.user.admin.password }}"
      
-    - name: 'Create the database'
+    - name: Create the database
       become: true
       become_user: postgres
       postgresql_db:
@@ -89,7 +89,7 @@
         owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
         encoding: UTF8
    
-    - name: 'Grant user access'
+    - name: Grant user access
       become: true
       become_user: postgres      
       community.general.postgresql_privs:
@@ -99,7 +99,7 @@
         grant_option: no
         privs: all  
 
-    - name: 'Restart Postgresql services'
+    - name: Restart Postgresql services
       become: true
       ansible.builtin.service:
         name: postgresql-14
