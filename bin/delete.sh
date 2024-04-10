@@ -63,9 +63,9 @@ chmod 755 delete.sh
 
 cd "${WORKSPACE_DIR}"
 
-#if [[ -d datacenter-prj ]]
-#then
-#  rm -rf datacenter-prj/
-#fi
+if [[ -d datacenter-prj ]]
+then
+  rm -rf datacenter-prj/
+fi
   
 echo "AWS datacenter deleted."  

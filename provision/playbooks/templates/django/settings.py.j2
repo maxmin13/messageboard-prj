@@ -13,12 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
-load_dotenv(BASE_DIR / ".env")
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -31,7 +32,7 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ["{{ instance_dns_domain }}", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://msg.maxmin.it"]
+CSRF_TRUSTED_ORIGINS = ["http://{{ instance_dns_domain }}"]
 
 # Application definition
 
@@ -81,9 +82,8 @@ WSGI_APPLICATION = "django_project.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # for local dev use db.sqlite3 file, in production, where variable DATABASE_URL is set, use postgresql
 
-DATABASES = {
-    "default": os.getenv("DATABASE_URL", default="sqlite:///db.sqlite3"),
-}
+DATABASE_URL = os.getenv("DATABASE_URL", default="sqlite:///db.sqlite3")
+DATABASES = {'default': dj_database_url.config(default=DATABASE_URL)}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

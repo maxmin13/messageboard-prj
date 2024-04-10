@@ -1,6 +1,6 @@
 - name: Deploy Django framework
   hosts:
-    - class_cms
+    - class_webservices
     
   gather_facts: false
   
@@ -19,26 +19,27 @@
       set_fact:
         instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
       vars:
-        jquery: "Datacenter.Instances[?Name=='{{ aws_instance_name }}'] | [0].DnsDomain"    
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
 
     - name: 'Controller host configuration'
       ansible.builtin.debug:
         msg:
-        - "project directory: {{ project_dir}}"
-        - "project name: {{ project_dir}}"
-        - "instance_dns_domain: {{ instance_dns_domain }}"
-        - "ssh port: {{ ansible_port }}"
-        - "ssh user: {{ ansible_user }}"
-        - "ssh key: {{ ansible_private_key_file }}"           
-       
+          - 'SSH port: {{ ansible_port }}'
+          - 'SSH user: {{ ansible_user }}'
+          - 'SSH key: {{ ansible_private_key_file }}'
+          - 'AWS instance domain: {{ instance_dns_domain }}'
+          - 'Django project name: {{ aws.instance.project.django.name }}' 
+          - 'Django super user name: {{ aws.instance.project.django.superuser.name }}' 
+          - 'Django super user email address: {{ aws.instance.project.django.superuser.email.address }}' 
+                 
     - name: Delete download directory
       become: true
       ansible.builtin.file:
         path: "{{ aws.instance.download.dir.path }}"
-        state: absent   
- 
+        state: absent       
+                  
   tasks:
-  
+   
     - name: Create download directory
       become: true
       ansible.builtin.file:
@@ -46,67 +47,97 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: 488   
-            
+        mode: 488        
+             
     - name: Get the project from Github (with agent forwarding)
       become: false
       ansible.builtin.git:
-        repo: "{{ aws.instance.project.repository.url }}"
+        repo: "{{ aws.instance.project.django.github.repository.url }}"
         dest: "{{ aws.instance.download.dir.path }}"
         version: master
         accept_hostkey: true
         update: false
-            
-    - name: Remove project directory
+ 
+    - name: Delete project directory
+      become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ aws.instance.project.django.dir.path }}"
         state: absent 
         
     - name: Create project directory
+      become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ aws.instance.project.django.dir.path }}"
         state: directory               
  
-    - name: Move project files
-      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
+    - name: Copy project files
+      become: true
+      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.django.dir.path }}"
       with_items:
-      - "{{ aws.instance.download.dir.path }}/manage.py"
-      - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
-      - "{{ aws.instance.download.dir.path }}/apps" 
-      - "{{ aws.instance.download.dir.path }}/templates" 
-
-    - name: Django environment file
+      - "{{ aws.instance.download.dir.path }}/project/manage.py"
+      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.django.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/apps" 
+      - "{{ aws.instance.download.dir.path }}/project/templates" 
+      
+    - name: Copy Django settings.py file
+      become: true
+      ansible.builtin.template:
+        src: django/settings.py.j2
+        dest: "{{ aws.instance.project.django.dir.path }}/{{ aws.instance.project.django.name }}/settings.py"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488 
+        
+    - name: Copy Django environment file
+      become: true
       ansible.builtin.template:
         src: django/env.j2
-        dest: "{{ aws.instance.project.dir.path }}/.env"
-        mode: 0400 
-              
+        dest: "{{ aws.instance.project.django.dir.path }}/.env"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0400                
+      
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.django.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
-        
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
+
     - name: Collect static files
+      become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-       
-    - name: Restart Gunicorn 
+        project_path: "{{ aws.instance.project.django.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"                  
+      
+    - name: Restart Gunicorn
+      become: true 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
+        enabled: true
         name: gunicorn
-      
-    - name: Restart Nginx 
+   
+    - name: Restart Nginx
+      become: true 
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: true
         name: nginx
     
+    - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+      become: false  
+      ansible.builtin.uri:
+        url: 'https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}/admin'
+        method: GET
+        status_code: 200
+        validate_certs: false
+        return_content: true
+      register: result
+      failed_when: "'Django site admin' not in result.content"    
+      
     - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
       become: false  
       ansible.builtin.uri:
@@ -116,8 +147,8 @@
         validate_certs: false
         return_content: true
       register: result
-      failed_when: "'messageboard app' not in result.content"       
-
+      failed_when: "'Message board posts' not in result.content"          
+          
   post_tasks:
   
     - name: Delete download directory

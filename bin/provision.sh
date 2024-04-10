@@ -58,12 +58,12 @@ fi
 
 echo "Creating messageboard virtual environment ..."
 
-##{
-##    python -m venv "${PROJECT_DIR}"/.venv
-##    source "${PROJECT_DIR}"/.venv/bin/activate
-##    python3 -m pip install -r "${PROJECT_DIR}"/requirements.txt
-##    deactivate
-##} > /dev/null
+{
+    python -m venv "${PROJECT_DIR}"/.venv
+    source "${PROJECT_DIR}"/.venv/bin/activate
+    python3 -m pip install -r "${PROJECT_DIR}"/requirements.txt
+    deactivate
+} > /dev/null
 
 echo "Messageboard virtual environment created."
 
@@ -77,7 +77,7 @@ cd "${PROJECT_DIR}"/provision || exit
 
 echo "Upgrading instances ..."
 
-##"${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml 
+"${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml 
 
 echo "Instances upgraded."
 
@@ -88,6 +88,7 @@ echo "Instances upgraded."
 echo "Installing Django web application ..."
 
 "${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-django.yml
+#"${ANSIBLE_PLAYBOOK_CMD}" playbooks/deploy-messageboard-app.yml
 
 echo "Django web application installed."
 echo "Messageboard application deployed."

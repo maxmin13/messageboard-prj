@@ -61,8 +61,8 @@ cd "${DATACENTER_PROJECT_DIR}"/bin
 
 echo "Creating AWS datacenter ..."
 
-#chmod 755 make.sh
-#./make.sh
+chmod 755 make.sh
+./make.sh
 
 echo "AWS datacenter created."
 echo "Provisioning the instance ..."
@@ -75,8 +75,8 @@ PROJECT_DIR="${DATACENTER_PROJECT_DIR}"
 export PRIVATE_KEY_FILE
 PRIVATE_KEY_FILE="${DATACENTER_PROJECT_DIR}"/access/"${AWS_INSTANCE_NAME}"
 
-#chmod 755 provision.sh
-#./provision.sh
+chmod 755 provision.sh
+./provision.sh
 
 echo "AWS datacenter provisioned."
 
@@ -101,10 +101,10 @@ chmod 755 provision.sh
 
 cd "${WORKSPACE_DIR}"
 
-####if [[ -d datacenter-prj ]]
-####then
-####  rm -rf datacenter-prj/
-####fi
+if [[ -d datacenter-prj ]]
+then
+  rm -rf datacenter-prj/
+fi
   
 echo "Messageboard Django application installed."  
   

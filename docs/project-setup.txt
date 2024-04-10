@@ -105,6 +105,10 @@ cd messageboard-prj
 source .venv/bin/activate
 cd project
 
+copy provision/playbooks/templeates/django/settings.py.j2 in project/django_project, rename it to settings.py,
+replace {{ instance_dns_domain }} with the appropriated DNS domain, for ex: messageboard.maxmin.it.
+do not commit this file, but each change has to be done in settings.py.j2
+
 python manage.py migrate
 python manage.py createsuperuser --username=admin --email=admin@gmail.com
 python manage.py runserver
