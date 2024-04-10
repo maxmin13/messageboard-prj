@@ -48,6 +48,12 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 488   
+        
+    - name: Delete virtualenv directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.project.django.venv.dir.path }}"
+        state: absent          
    
     - name: Create virtualenv
       become: true
@@ -58,7 +64,7 @@
           - setuptools
         state: latest
         virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
-        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"   
+        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"      
 
     - name: Upload requirements
       copy:
@@ -102,7 +108,7 @@
         grant_option: no
         privs: all  
 
-    - name: Restart Postgresql services
+    - name: Restart PostgreSql services
       become: true
       ansible.builtin.service:
         name: '{{ aws.instance.postgresql.database.service.name }}'
@@ -145,14 +151,30 @@
         path: "{{ aws.instance.project.django.dir.path }}"
         state: directory               
  
-    - name: Move project files
+    - name: Copy project files
       become: true
       ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.django.dir.path }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/project/manage.py"
       - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.django.name }}" 
       - "{{ aws.instance.download.dir.path }}/project/apps" 
-      - "{{ aws.instance.download.dir.path }}/project/templates"  
+      - "{{ aws.instance.download.dir.path }}/project/templates" 
+      
+    - name: Copy Django settings.py file
+      become: true
+      ansible.builtin.template:
+        src: django/settings.py.j2
+        dest: "{{ aws.instance.project.django.dir.path }}/{{ aws.instance.project.django.name }}/settings.py"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 488 
+        
+    - name: Copy Django environment file
+      become: true
+      ansible.builtin.template:
+        src: django/env.j2
+        dest: "{{ aws.instance.project.django.dir.path }}/.env"
+        mode: 0400                
       
     - name: Run database migrations
       community.general.django_manage:
@@ -160,28 +182,14 @@
         project_path: "{{ aws.instance.project.django.dir.path }}"  
         virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
 
     - name: Collect static files
       become: true
       community.general.django_manage:
         command: collectstatic
         project_path: "{{ aws.instance.project.django.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
-        
-    - name: Django environment file
-      become: true
-      ansible.builtin.template:
-        src: django/env.j2
-        dest: "{{ aws.instance.project.django.venv.dir.path }}"
-        mode: 0400  
-
-    - name: Django settings file
-      become: true
-      ansible.builtin.template:
-        src: django/settings.py.j2
-        dest: "{{ aws.instance.project.django.dir.path }}/{{ aws.instance.project.django.project.name }}"
-        mode: 0400                       
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"                  
         
     - name: Remove the Nginx config file
       become: true
@@ -189,21 +197,21 @@
         path: "{{ aws.instance.nginx.config.file }}"
         state: absent
 
-    - name: Deploy Nginx config file
+    - name: Copy Nginx config file
       become: true
       ansible.builtin.template:
         src: nginx/nginx.conf.j2
         dest: '{{ aws.instance.nginx.config.file }}'
         mode: 436
       
-    - name: Gunicorn socket config file
+    - name: Copy Gunicorn socket config file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.socket.j2
         dest: "/etc/systemd/system/gunicorn.socket"
         mode: 0400 
         
-    - name: Gunicorn service file
+    - name: Copy Gunicorn service file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.service.j2
@@ -216,7 +224,7 @@
         path: "{{ aws.instance.gunicorn.config.dir.path }}"
         state: directory         
    
-    - name: Gunicorn config file
+    - name: Copy Gunicorn config file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.conf.py.j2

@@ -54,7 +54,7 @@ aws:
           path: "/opt/messagebaord"
         venv:
           dir:
-            path: "/opt/messagebaord/.venv"
+            path: "/opt/.venv"
         superuser:
           name: "{{ django_superuser_name }}"
           email:
