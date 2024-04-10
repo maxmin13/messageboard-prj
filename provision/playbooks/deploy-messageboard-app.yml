@@ -19,11 +19,13 @@
       set_fact:
         instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
       vars:
-        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
+        jquery: "Datacenter.Instances[?Name=='{{ aws_instance_name }}'] | [0].DnsDomain"    
 
     - name: 'Controller host configuration'
       ansible.builtin.debug:
         msg:
+        - "project directory: {{ project_dir}}"
+        - "project name: {{ project_dir}}"
         - "instance_dns_domain: {{ instance_dns_domain }}"
         - "ssh port: {{ ansible_port }}"
         - "ssh user: {{ ansible_user }}"
@@ -85,8 +87,8 @@
         project_path: "{{ aws.instance.project.dir.path }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
-
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
+        
     - name: Collect static files
       community.general.django_manage:
         command: collectstatic

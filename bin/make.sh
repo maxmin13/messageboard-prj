@@ -6,8 +6,9 @@
 # Django application.
 #
 # run:
-# export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
-# export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
+##
+## export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
+## export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
 #
 #    ./make.sh
 #
@@ -17,21 +18,22 @@ set -o errexit
 set -o pipefail
 set -o nounset
 set +o xtrace
-  
-WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
-export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
-export DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
 
 if [[ ! -v AWS_REMOTE_USER ]]
 then
   echo "ERROR: environment variable AWS_REMOTE_USER not set!"
   exit 1
 fi
+
 if [[ ! -v AWS_REMOTE_USER_PASSWORD ]]
 then
   echo "ERROR: environment variable AWS_REMOTE_USER_PASSWORD not set!"
   exit 1
 fi
+
+WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
+MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
 #######################################
 # DATACENTER ENVIRONMENT AND INSTANCE #
@@ -43,61 +45,66 @@ if [[ ! -d "${DATACENTER_PROJECT_DIR}" ]]
 then
   git clone git@github.com:maxmin13/datacenter-prj.git 
 
-  echo "Datacenter project cloned."
+  echo "AWS datacenter project cloned."
 else
-  echo "Datacenter project already cloned."
+  echo "AWS datacenter project already cloned."
 fi
 
 # override the default configuration files in datacenter-prj.
 cp "${MESSAGEBOARD_PROJECT_DIR}/config/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
 cp "${MESSAGEBOARD_PROJECT_DIR}/config/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
-
-# copy Ansible group_vars file for the message-board application
-cp "${MESSAGEBOARD_PROJECT_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_PROJECT_DIR}/provision/inventory/group_vars"
+cp "${MESSAGEBOARD_PROJECT_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_PROJECT_DIR}"/provision/inventory/group_vars
 
 echo "Datacenter project config files set."
 
 cd "${DATACENTER_PROJECT_DIR}"/bin
 
-echo "Creating datacenter ..."
+echo "Creating AWS datacenter ..."
 
-chmod 755 make.sh
-./make.sh
+#chmod 755 make.sh
+#./make.sh
 
-echo "Datacenter created."
+echo "AWS datacenter created."
 echo "Provisioning the instance ..."
 
-chmod 755 provision.sh
-./provision.sh
+# variables for datacenter-prj:name_admin_box file:
+export AWS_INSTANCE_NAME
+AWS_INSTANCE_NAME=messageboard-box 
+export PROJECT_DIR
+PROJECT_DIR="${DATACENTER_PROJECT_DIR}"
+export PRIVATE_KEY_FILE
+PRIVATE_KEY_FILE="${DATACENTER_PROJECT_DIR}"/access/"${AWS_INSTANCE_NAME}"
 
-echo "Datacenter provisioned."
+#chmod 755 provision.sh
+#./provision.sh
+
+echo "AWS datacenter provisioned."
 
 ###########################
 # MESSAGEBOARD DJANGO APP #
 ###########################
 
-echo "Installing Django message-board application ..."
-
-{
-    python -m venv "${MESSAGEBOARD_PROJECT_DIR}"/.venv
-    source "${MESSAGEBOARD_PROJECT_DIR}"/.venv/bin/activate
-    python3 -m pip install -r "${MESSAGEBOARD_PROJECT_DIR}"/requirements.txt
-    deactivate
-} > /dev/null
-
-echo "Messageboard virtual environment created."
+echo "Deploying Django messageboard application ..."
 
 cd "${MESSAGEBOARD_PROJECT_DIR}"/bin
+
+# variables for messageboard-prj:name_messageboard_box file:
+export AWS_INSTANCE_NAME
+AWS_INSTANCE_NAME=messageboard-box 
+export PROJECT_DIR
+PROJECT_DIR="${MESSAGEBOARD_PROJECT_DIR}"
+export PRIVATE_KEY_FILE
+PRIVATE_KEY_FILE="${DATACENTER_PROJECT_DIR}"/access/"${AWS_INSTANCE_NAME}"
 
 chmod 755 provision.sh
 ./provision.sh
 
 cd "${WORKSPACE_DIR}"
 
-if [[ -d datacenter-prj ]]
-then
-  rm -rf datacenter-prj/
-fi
+####if [[ -d datacenter-prj ]]
+####then
+####  rm -rf datacenter-prj/
+####fi
   
 echo "Messageboard Django application installed."  
   

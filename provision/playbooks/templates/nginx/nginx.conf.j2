@@ -49,7 +49,7 @@ http {
         }
         
         location /staticfiles/ {
-                root {{ aws.instance.project.dir.path }};
+                root {{ aws.instance.project.django.dir.path }};
         }
 
         # configure nginx as a reverse proxy for gunicorn

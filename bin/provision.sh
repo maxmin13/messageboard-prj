@@ -16,10 +16,13 @@ set +o xtrace
 ##
 ## run:
 ##
-## export AWS_AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
-## export AWS_AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
+## export AWS_REMOTE_USER=awsadmin
+## export AWS_REMOTE_USER_PASSWORD=awsadmin
+## export AWS_INSTANCE_NAME=<ex: admin-box (see: datacenter.json file, field: Datacenter.Instances[].name >
+## export PROJECT_DIR=<ex: /home/vagrant/workspace/messageboard-prj >   
+## export PRIVATE_KEY_FILE=<ex: /home/vagrant/workspace/datacenter-prj/access/message-box >  
 ##
-## ./provision.exp 
+## ./provision.sh 
 ##
 ###########################################################################
 
@@ -35,22 +38,48 @@ then
   exit 1
 fi
 
-WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
-export MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
+if [[ ! -v AWS_INSTANCE_NAME ]]
+then
+  echo "ERROR: environment variable AWS_INSTANCE_NAME not set!"
+  exit 1
+fi
 
-ANSIBLE_PLAYBOOK_CMD="${MESSAGEBOARD_PROJECT_DIR}"/.venv/bin/ansible-playbook
+if [[ ! -v PROJECT_DIR ]]
+then
+  echo "ERROR: environment variable PROJECT_DIR not set!"
+  exit 1
+fi
+
+if [[ ! -v PRIVATE_KEY_FILE ]]
+then
+  echo "ERROR: environment variable PRIVATE_KEY_FILE not set!"
+  exit 1
+fi
+
+echo "Creating messageboard virtual environment ..."
+
+##{
+##    python -m venv "${PROJECT_DIR}"/.venv
+##    source "${PROJECT_DIR}"/.venv/bin/activate
+##    python3 -m pip install -r "${PROJECT_DIR}"/requirements.txt
+##    deactivate
+##} > /dev/null
+
+echo "Messageboard virtual environment created."
+
+ANSIBLE_PLAYBOOK_CMD="${PROJECT_DIR}"/.venv/bin/ansible-playbook
+
+cd "${PROJECT_DIR}"/provision || exit
 
 ########################
 ##### UPDATE SYSTEM ####
 ########################
 
-echo "Upgrading the instance ..."
+echo "Upgrading instances ..."
 
-cd "${MESSAGEBOARD_PROJECT_DIR}"/provision || exit
+##"${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml 
 
- "${ANSIBLE_PLAYBOOK_CMD}" playbooks/upgrade.yml
-
-echo "Instance upgraded."
+echo "Instances upgraded."
 
 #################
 ##### DJANGO ####

@@ -1,6 +1,6 @@
 - name: Deploy Django framework
   hosts:
-    - class_cms
+    - class_webservices
     
   gather_facts: false
   
@@ -24,11 +24,14 @@
     - name: 'Controller host configuration'
       ansible.builtin.debug:
         msg:
-        - "instance_dns_domain: {{ instance_dns_domain }}"
-        - "ssh port: {{ ansible_port }}"
-        - "ssh user: {{ ansible_user }}"
-        - "ssh key: {{ ansible_private_key_file }}"           
-       
+          - 'SSH port: {{ ansible_port }}'
+          - 'SSH user: {{ ansible_user }}'
+          - 'SSH key: {{ ansible_private_key_file }}'
+          - 'AWS instance domain: {{ instance_dns_domain }}'
+          - 'Django project name: {{ aws.instance.project.django.name }}' 
+          - 'Django super user name: {{ aws.instance.project.django.superuser.name }}' 
+          - 'Django super user email address: {{ aws.instance.project.django.superuser.email.address }}' 
+                 
     - name: Delete download directory
       become: true
       ansible.builtin.file:
@@ -54,7 +57,7 @@
           - wheel
           - setuptools
         state: latest
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
         virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"   
 
     - name: Upload requirements
@@ -66,7 +69,7 @@
     - name: Install required packages
       become: true
       ansible.builtin.pip:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
         requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"
 
     - name: Install psycopg2 for ansible to be able to create postgresql users
@@ -75,23 +78,23 @@
       
     - name: Create database user
       become: true
-      become_user: postgres       
+      become_user: "{{ aws.instance.postgresql.superuser }}"       
       community.general.postgresql_user:
         state: present
         name: "{{ aws.instance.postgresql.database.user.admin.name }}"
-        password: "{{ aws.instance.postgresql.database.user.admin.password }}"
+        password: "{{ postgresql_admin_user_password }}"
      
     - name: Create the database
       become: true
-      become_user: postgres
-      postgresql_db:
+      become_user: "{{ aws.instance.postgresql.superuser }}"
+      community.general.postgresql_db:
         name: "{{ aws.instance.postgresql.database.name }}"
         owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
         encoding: UTF8
    
     - name: Grant user access
       become: true
-      become_user: postgres      
+      become_user: "{{ aws.instance.postgresql.superuser }}"      
       community.general.postgresql_privs:
         type: database
         database: "{{ aws.instance.postgresql.database.name }}"
@@ -102,7 +105,7 @@
     - name: Restart Postgresql services
       become: true
       ansible.builtin.service:
-        name: postgresql-14
+        name: '{{ aws.instance.postgresql.database.service.name }}'
         state: restarted
         enabled: true         
  
@@ -124,7 +127,7 @@
     - name: Get the project from Github (with agent forwarding)
       become: false
       ansible.builtin.git:
-        repo: "{{ aws.instance.project.repository.url }}"
+        repo: "{{ aws.instance.project.django.github.repository.url }}"
         dest: "{{ aws.instance.download.dir.path }}"
         version: master
         accept_hostkey: true
@@ -133,58 +136,65 @@
     - name: Delete project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ aws.instance.project.django.dir.path }}"
         state: absent 
         
     - name: Create project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ aws.instance.project.django.dir.path }}"
         state: directory               
  
     - name: Move project files
       become: true
-      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
+      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.django.dir.path }}"
       with_items:
-      - "{{ aws.instance.download.dir.path }}/manage.py"
-      - "{{ aws.instance.download.dir.path }}/{{ aws.instance.project.name }}" 
-      - "{{ aws.instance.download.dir.path }}/apps" 
-      - "{{ aws.instance.download.dir.path }}/templates"  
+      - "{{ aws.instance.download.dir.path }}/project/manage.py"
+      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.django.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/apps" 
+      - "{{ aws.instance.download.dir.path }}/project/templates"  
       
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.django.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
 
     - name: Collect static files
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ aws.instance.project.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.django.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
         
     - name: Django environment file
       become: true
       ansible.builtin.template:
         src: django/env.j2
-        dest: "{{ aws.instance.project.dir.path }}/.env"
-        mode: 0400          
+        dest: "{{ aws.instance.project.django.venv.dir.path }}"
+        mode: 0400  
+
+    - name: Django settings file
+      become: true
+      ansible.builtin.template:
+        src: django/settings.py.j2
+        dest: "{{ aws.instance.project.django.dir.path }}/{{ aws.instance.project.django.project.name }}"
+        mode: 0400                       
         
     - name: Remove the Nginx config file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
+        path: "{{ aws.instance.nginx.config.file }}"
         state: absent
 
     - name: Deploy Nginx config file
       become: true
       ansible.builtin.template:
         src: nginx/nginx.conf.j2
-        dest: "{{ aws.instance.nginx.install.dir.path }}/nginx.conf"
-        mode: 0400
+        dest: '{{ aws.instance.nginx.config.file }}'
+        mode: 436
       
     - name: Gunicorn socket config file
       become: true
@@ -261,8 +271,8 @@
     - name: Check Django admin app superuser exists
       become: true
       community.general.django_manage:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        project_path: "{{ aws.instance.project.dir.path }}"
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.django.dir.path }}"
         command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ aws.instance.project.django.superuser.name }}").count() > 0 else 1)'
       register: checksuperuser
       ignore_errors: True
@@ -271,13 +281,13 @@
     - name: Create Django admin app superuser
       become: true
       community.general.django_manage:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        project_path: "{{ aws.instance.project.dir.path }}"
-        command: "createsuperuser --noinput --username={{ aws.instance.project.django.superuser.name }} --email={{ aws.instance.project.django.superuser.name }}@gmail.com"     
+        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.django.dir.path }}"
+        command: "createsuperuser --noinput --username={{ aws.instance.project.django.superuser.name }} --email={{ aws.instance.project.django.superuser.email.address }}"     
       ignore_errors: True
       environment: 
-        DATABASE_URL: "postgres://{{ aws.instance.postgresql.database.user.admin.name }}:{{ aws.instance.postgresql.database.user.admin.password }}@localhost/{{ aws.instance.postgresql.database.name }}"
-        DJANGO_SUPERUSER_PASSWORD: "{{ aws.instance.project.django.superuser.password }}" 
+        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
+        DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_password }}" 
       when: checksuperuser is not succeeded
       
   post_tasks:

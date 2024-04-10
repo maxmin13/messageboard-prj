@@ -29,7 +29,7 @@ SECRET_KEY = (
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["msg.maxmin.it", "localhost"]
+ALLOWED_HOSTS = ["{{ instance_dns_domain }}", "localhost"]
 CSRF_TRUSTED_ORIGINS = ["http://msg.maxmin.it"]
 
 # Application definition

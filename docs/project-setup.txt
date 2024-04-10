@@ -13,9 +13,9 @@ python -m venv ".venv"
 source .venv/bin/activate
 
 ## Software required in production AWS:
-python -m pip install ansible~=8.2.0
-python -m pip install botocore~=1.31.0
-python -m pip install boto3~=1.28.0
+python -m pip install ansible~=9.3.0
+python -m pip install botocore~=1.34.61
+python -m pip install boto3~=1.34.62
 python -m pip install Django~=4.2.0
 python -m pip install gunicorn~=21.2.0
 python -m pip install environs~=9.5.0
@@ -23,9 +23,11 @@ python -m pip install "psycopg2-binary"~=2.9.0
 python -m pip install whitenoise~=6.5.0
 python -m pip install dj-database-url~=2.0.0
 
+ansible-galaxy collection install amazon.aws
+
 # freeze the libs in a requirement.txt
 # this requirement file will be uploaded to the AWS instance.
-python -m pip freeze > provision/playbooks/files/admin/requirements.txt
+python -m pip freeze > provision/playbooks/files/env/requirements.txt
 
 ## Development software:
 python -m pip install ansible-lint

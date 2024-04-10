@@ -94,24 +94,8 @@
 				],
 				"Tags": [
 					{
-						"Key": "Class",
-						"Value": "cms"
-					},
-					{
-						"Key": "Database",
-						"Value": "postgresql"
-					},
-					{
-						"Key": "Program",
-						"Value": "python"
-					},
-					{
-						"Key": "Security",
-						"Value": "openssl"
-					},
-					{
-						"Key": "Webserver",
-						"Value": "nginx"
+					"Key": "Class",
+					"Value": "webservices"
 					}
 				]
 			}
@@ -130,7 +114,23 @@
 				"Tags": [
 					{
 						"Key": "Class",
-						"Value": "cms"
+						"Value": "webservices"
+					},
+					{
+						"Key": "Database",
+						"Value": "postgresql"
+					},
+					{
+						"Key": "Program",
+						"Value": "python"
+					},
+					{
+						"Key": "Security",
+						"Value": "openssl"
+					},
+					{
+						"Key": "Webserver",
+						"Value": "nginx"
 					}
 				]
 			}
