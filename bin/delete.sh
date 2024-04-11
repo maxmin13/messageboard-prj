@@ -2,7 +2,7 @@
 # shellcheck disable=SC1091
 
 ##############################################################################
-# The script deletes a datacenter on AWS.
+# The script deletes a datacenter on AWS and the messageboard application.
 #
 # run:
 ##
@@ -31,8 +31,8 @@ then
 fi
 
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
-DATACENTER_PROJECT_DIR="${WORKSPACE_DIR}"/datacenter-prj
-MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
+DATACENTER_DIR="${WORKSPACE_DIR}"/datacenter-prj
+MESSAGEBOARD_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
 #######################################
 # DATACENTER ENVIRONMENT AND INSTANCE #
@@ -40,26 +40,30 @@ MESSAGEBOARD_PROJECT_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
 cd "${WORKSPACE_DIR}"
 
-if [[ ! -d "${DATACENTER_PROJECT_DIR}" ]]
+if [[ ! -d "${DATACENTER_DIR}" ]]
 then
   git clone git@github.com:maxmin13/datacenter-prj.git 
 
-  echo "Datacenter project cloned."
+  echo "AWS datacenter project cloned."
 else
-  echo "Datacenter project already cloned."
+  echo "AWS datacenter project already cloned."
 fi
 
 # override the default configuration files in datacenter-prj.
-cp "${MESSAGEBOARD_PROJECT_DIR}/config/datacenter.json" "${DATACENTER_PROJECT_DIR}"/config
-cp "${MESSAGEBOARD_PROJECT_DIR}/config/hostedzone.json" "${DATACENTER_PROJECT_DIR}"/config
+cp "${MESSAGEBOARD_DIR}/config/datacenter.json" "${DATACENTER_DIR}"/config
+cp "${MESSAGEBOARD_DIR}/config/hostedzone.json" "${DATACENTER_DIR}"/config
+cp "${MESSAGEBOARD_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_DIR}"/provision/inventory/group_vars
 
 echo "Datacenter project config files set."
 
+cd "${DATACENTER_DIR}"/bin
+
 echo "Deleting AWS datacenter ..."
 
-cd "${DATACENTER_PROJECT_DIR}"/bin
 chmod 755 delete.sh
 ./delete.sh
+
+echo "AWS datacenter deleted."
 
 cd "${WORKSPACE_DIR}"
 
@@ -68,4 +72,6 @@ then
   rm -rf datacenter-prj/
 fi
   
-echo "AWS datacenter deleted."  
+echo "Messageboard application installed."  
+  
+  

@@ -3,7 +3,7 @@
 
 ##############################################################################
 # The script creates a datacenter on AWS and installs the messageboard
-# Django application.
+# application.
 #
 # run:
 ##
