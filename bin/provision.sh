@@ -18,9 +18,8 @@ set +o xtrace
 ##
 ## export AWS_REMOTE_USER=awsadmin
 ## export AWS_REMOTE_USER_PASSWORD=awsadmin
-## export AWS_INSTANCE_NAME=<ex: admin-box (see: datacenter.json file, field: Datacenter.Instances[].name >
-## export PROJECT_DIR=<ex: /home/vagrant/workspace/messageboard-prj >   
-## export PRIVATE_KEY_FILE=<ex: /home/vagrant/workspace/datacenter-prj/access/message-box >  
+## export MESSAGEBOARD_DIR=<ex: /home/vagrant/workspace/messageboard-prj >   
+## export DATACENTER_DIR=<ex: /home/vagrant/workspace/datacenter-prj >  
 ##
 ## ./provision.sh 
 ##
@@ -38,21 +37,19 @@ then
   exit 1
 fi
 
-if [[ ! -v AWS_INSTANCE_NAME ]]
+# directory where the datacenter project is downloaded from github
+# see: name_admin_box file
+if [[ ! -v DATACENTER_DIR ]]
 then
-  echo "ERROR: environment variable AWS_INSTANCE_NAME not set!"
+  echo "ERROR: environment variable DATACENTER_DIR not set!"
   exit 1
 fi
 
-if [[ ! -v PROJECT_DIR ]]
+# directory where the messageboard project is downloaded from github
+# see: name_messageboard_box file
+if [[ ! -v MESSAGEBOARD_DIR ]]
 then
-  echo "ERROR: environment variable PROJECT_DIR not set!"
-  exit 1
-fi
-
-if [[ ! -v PRIVATE_KEY_FILE ]]
-then
-  echo "ERROR: environment variable PRIVATE_KEY_FILE not set!"
+  echo "ERROR: environment variable MESSAGEBOARD_DIR not set!"
   exit 1
 fi
 

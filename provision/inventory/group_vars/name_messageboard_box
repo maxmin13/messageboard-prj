@@ -1,7 +1,14 @@
-instance_name: "{{ lookup('env','AWS_INSTANCE_NAME') }}"
-project_dir: "{{ lookup('env','PROJECT_DIR') }}"
 
-ansible_ssh_private_key_file: "{{ lookup('env','PRIVATE_KEY_FILE') }}"
+# tag name of the messagborad AWS instance 
+messageboard_instance_name: "messageboard-box"
+
+# directory where the messageboard project is downloaded from github, used in the playbooks
+messageboard_dir: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
+
+# directory where the datacenter project is downloaded from github, used in the playbooks
+datacenter_dir: "{{ lookup('env','DATACENTER_DIR') }}"
+
+ansible_ssh_private_key_file: "{{ datacenter_dir }}/access/{{ messageboard_instance_name }}"
 ansible_user: "{{ lookup('env','AWS_REMOTE_USER') }}" 
 ansible_password: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"
 ansible_sudo_pass: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"
