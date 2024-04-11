@@ -78,6 +78,6 @@ then
   rm -rf datacenter-prj/
 fi
   
-echo "Messageboard application installed."  
+echo "Messageboard application deleted."  
   
   
