@@ -32,7 +32,13 @@ then
 fi
 
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
+
+# directory where the datacenter project is downloaded from github
+# see: name_messageboard_box file
 DATACENTER_DIR="${WORKSPACE_DIR}"/datacenter-prj
+
+# directory where the messagboard project is downloaded from github
+# see: name_messageboard_box file
 MESSAGEBOARD_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
 #######################################
@@ -55,7 +61,7 @@ cp "${MESSAGEBOARD_DIR}/config/datacenter.json" "${DATACENTER_DIR}"/config
 cp "${MESSAGEBOARD_DIR}/config/hostedzone.json" "${DATACENTER_DIR}"/config
 cp "${MESSAGEBOARD_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_DIR}"/provision/inventory/group_vars
 
-echo "Datacenter project config files set."
+echo "Datacenter config files set."
 
 cd "${DATACENTER_DIR}"/bin
 
