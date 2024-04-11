@@ -205,22 +205,40 @@
         src: nginx/nginx.conf.j2
         dest: '{{ aws.instance.nginx.config.file }}'
         mode: 436
-      
-    - name: Copy Gunicorn socket config file
+
+    - name: Remove Gunicorn socket file
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.socket.file.path }}"
+        state: absent
+              
+    - name: Copy Gunicorn socket file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.socket.j2
-        dest: "/etc/systemd/system/gunicorn.socket"
+        dest: "{{ aws.instance.gunicorn.socket.file.path }}"
         mode: 0400 
+        
+    - name: Remove Gunicorn service file
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.service.file.path }}"
+        state: absent        
         
     - name: Copy Gunicorn service file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.service.j2
-        dest: "/etc/systemd/system/gunicorn.service"
-        mode: 0400                       
+        dest: "{{ aws.instance.gunicorn.service.file.path }}"
+        mode: 0400   
         
-    - name: Create Gunicorn directory
+    - name: Delete Gunicorn configuration directory
+      become: true
+      ansible.builtin.file:
+        path: "{{ aws.instance.gunicorn.config.dir.path }}"
+        state: absent                             
+        
+    - name: Create Gunicorn configuration directory
       become: true
       ansible.builtin.file:
         path: "{{ aws.instance.gunicorn.config.dir.path }}"
@@ -230,7 +248,7 @@
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.conf.py.j2
-        dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py"
+        dest: "{{ aws.instance.gunicorn.config.file.path }}"
         mode: 0400  
         
     - name: Restart Gunicorn socket

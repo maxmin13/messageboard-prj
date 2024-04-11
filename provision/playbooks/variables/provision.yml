@@ -24,11 +24,14 @@ aws:
             name: 'postgresql-{{ postgresql_version }}'  
     gunicorn:
        config:
-         dir:
+         file:
            path: "/opt/gunicorn"
        socket:
          file: 
-           path: "/run/gunicorn.sock"      
+           path: "/etc/systemd/system/gunicorn.socket"     
+       service:
+         file:
+           path: "/etc/systemd/system/gunicorn.service" 
     nginx:
       install:
          dir:
