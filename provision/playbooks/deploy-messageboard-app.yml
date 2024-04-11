@@ -19,7 +19,7 @@
       set_fact:
         instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
       vars:
-        jquery: "Datacenter.Instances[?Name=='{{ messageboard_instance_name }}'] | [0].DnsDomain"    
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
 
     - name: 'Controller host configuration'
       ansible.builtin.debug:
