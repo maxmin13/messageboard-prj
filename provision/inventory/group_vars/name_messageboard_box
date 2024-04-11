@@ -1,11 +1,11 @@
 
 # tag name of the messagborad AWS instance 
-messageboard_instance_name: "messageboard-box"
+instance_name: "messageboard-box"
 
-# directory where the messageboard project is downloaded from github, used in the playbooks
+# directory where the messageboard project is downloaded from github, used in the messageboard playbooks
 messageboard_dir: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
 
-# directory where the datacenter project is downloaded from github, used in the playbooks
+# directory where the datacenter project is downloaded from github, used in the datacenter playbooks
 datacenter_dir: "{{ lookup('env','DATACENTER_DIR') }}"
 
 ansible_ssh_private_key_file: "{{ datacenter_dir }}/access/{{ messageboard_instance_name }}"
