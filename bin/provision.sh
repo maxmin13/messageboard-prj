@@ -56,7 +56,7 @@ fi
 echo "Creating messageboard virtual environment ..."
 
 {
-    python -m venv "${PROJECT_DIR}"/.venv
+    python -m venv "${MESSAGEBOARD_DIR}"/.venv
     source "${MESSAGEBOARD_DIR}"/.venv/bin/activate
     python3 -m pip install -r "${MESSAGEBOARD_DIR}"/requirements.txt
     deactivate
