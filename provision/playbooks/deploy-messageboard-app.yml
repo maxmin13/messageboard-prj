@@ -7,7 +7,6 @@
   vars_files:
     - variables/vars.yml
     - variables/provision.yml
-    - variables/secrets.yml
           
   pre_tasks:
   

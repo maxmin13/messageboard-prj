@@ -7,7 +7,6 @@
   vars_files:
     - variables/vars.yml
     - variables/provision.yml
-    - variables/secrets.yml
           
   pre_tasks:
   
@@ -172,7 +171,7 @@
     - name: Copy environment file
       become: true
       ansible.builtin.template:
-        src: django/env.j2
+        src: env/env.j2
         dest: "{{ aws.instance.project.django.dir.path }}/.env"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
