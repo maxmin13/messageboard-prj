@@ -57,16 +57,16 @@ echo "Creating messageboard virtual environment ..."
 
 {
     python -m venv "${PROJECT_DIR}"/.venv
-    source "${PROJECT_DIR}"/.venv/bin/activate
-    python3 -m pip install -r "${PROJECT_DIR}"/requirements.txt
+    source "${MESSAGEBOARD_DIR}"/.venv/bin/activate
+    python3 -m pip install -r "${MESSAGEBOARD_DIR}"/requirements.txt
     deactivate
 } > /dev/null
 
 echo "Messageboard virtual environment created."
 
-ANSIBLE_PLAYBOOK_CMD="${PROJECT_DIR}"/.venv/bin/ansible-playbook
+ANSIBLE_PLAYBOOK_CMD="${MESSAGEBOARD_DIR}"/.venv/bin/ansible-playbook
 
-cd "${PROJECT_DIR}"/provision || exit
+cd "${MESSAGEBOARD_DIR}"/provision || exit
 
 ########################
 ##### UPDATE SYSTEM ####
