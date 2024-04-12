@@ -73,8 +73,10 @@ chmod 755 make.sh
 echo "AWS datacenter created."
 echo "Provisioning the instance ..."
 
-# variables for datacenter-prj:name_admin_box file:
-export DATACENTER_DIR
+# variables for messageboard-prj:name_messageboard_box file:
+export DATACENTER_DIR 
+export MESSAGEBOARD_DIR
+export AWS_DATACENTER_INSTANCE_NAME = "admin-box"
 
 chmod 755 provision.sh
 ./provision.sh
@@ -93,7 +95,6 @@ cd "${MESSAGEBOARD_DIR}"/bin
 export DATACENTER_DIR 
 export MESSAGEBOARD_DIR
 export AWS_DATACENTER_INSTANCE_NAME = "admin-box"
-
 
 chmod 755 provision.sh
 ./provision.sh

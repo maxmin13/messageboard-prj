@@ -1,9 +1,16 @@
+# envirnoment variables:
+#
+# AWS_DATACENTER_INSTANCE_NAME
+# MESSAGEBOARD_DIR
+# DATACENTER_DIR
+# AWS_REMOTE_USER
+# AWS_REMOTE_USER_PASSWORD
 
 # tag name of the messagboard AWS instance 
-instance_name: "messageboard-box"
+messageboard_instance_name: "messageboard-box"
 
 # tag name of the datacenter AWS instance 
-datacenter_instance_name: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
+datacenter_instance_name: "{{ lookup('env','AWS_DATACENTER_INSTANCE_NAME') }}"
 
 # directory where the messageboard project is downloaded from github, used in the messageboard playbooks
 messageboard_dir: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
