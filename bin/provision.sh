@@ -20,7 +20,6 @@ set +o xtrace
 ## export AWS_REMOTE_USER_PASSWORD=awsadmin
 ## export MESSAGEBOARD_DIR=<ex: /home/vagrant/workspace/messageboard-prj >   
 ## export DATACENTER_DIR=<ex: /home/vagrant/workspace/datacenter-prj >  
-## export AWS_DATACENTER_INSTANCE_NAME = <ex: admin-box>
 ##
 ## ./provision.sh 
 ##
@@ -51,14 +50,6 @@ fi
 if [[ ! -v MESSAGEBOARD_DIR ]]
 then
   echo "ERROR: environment variable MESSAGEBOARD_DIR not set!"
-  exit 1
-fi
-
-# name of the AWS datacenter instance
-# see: name_messageboard_box file
-if [[ ! -v AWS_DATACENTER_INSTANCE_NAME ]]
-then
-  echo "ERROR: environment variable AWS_DATACENTER_INSTANCE_NAME not set!"
   exit 1
 fi
 

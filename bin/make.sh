@@ -95,7 +95,6 @@ cd "${MESSAGEBOARD_DIR}"/bin
 # variables for messageboard-prj:name_messageboard_box file:
 export DATACENTER_DIR 
 export MESSAGEBOARD_DIR
-export AWS_DATACENTER_INSTANCE_NAME = "admin-box"
 
 chmod 755 provision.sh
 ./provision.sh
