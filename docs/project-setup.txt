@@ -121,11 +121,6 @@ admin
 # load the posts in the Post web application
 http://localhost:8000/
 
-########
-# Tests
-########
-
-python manage.py test
 
 #############
 # Deployment

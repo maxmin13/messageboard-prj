@@ -1,0 +1,7 @@
+generate ssh key and upload it to github account:
+
+ssh-keygen -t rsa -b 4096 -C "minardi.massimiliano@libero.it"
+
+clone the project:
+
+git clone git@github.com:maxmin13/datacenter-prj.git
