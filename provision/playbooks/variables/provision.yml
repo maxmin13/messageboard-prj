@@ -51,18 +51,17 @@ aws:
       https:
         port: "8443"            
     project:
-      django:
-        name: "{{ django_project_name }}"
+      name: "{{ django_project_name }}"
+      dir:
+        path: "/opt/messagebaord"
+      venv:
         dir:
-          path: "/opt/messagebaord"
-        venv:
-          dir:
-            path: "/opt/.venv"
-        superuser:
-          name: "{{ django_superuser_name }}"
-          email:
-            address: '{{ django_superuser_email_address }}'
-        github:
-          repository:
-            url: git@github.com:maxmin13/messageboard-prj.git
+          path: "/opt/.venv"
+      superuser:
+        name: "{{ django_superuser_name }}"
+        email:
+          address: '{{ django_superuser_email_address }}'
+      github:
+        repository:
+          url: git@github.com:maxmin13/messageboard-prj.git
 ...
