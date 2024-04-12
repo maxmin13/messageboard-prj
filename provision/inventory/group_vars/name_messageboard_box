@@ -5,7 +5,7 @@
 # AWS_REMOTE_USER
 # AWS_REMOTE_USER_PASSWORD
 
-# tag name of the messagboard AWS instance 
+# tag 'Name' in the messageboard AWS instance 
 messageboard_instance_name: "messageboard-box"
 
 # directory where the messageboard project is downloaded from github, used in the messageboard playbooks
