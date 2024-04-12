@@ -19,7 +19,7 @@
       set_fact:
         instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
       vars:
-        jquery: "Datacenter.Instances[?Name=='{{ messageboard_instance_name }}'] | [0].DnsDomain"    
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
 
     - name: 'Controller host configuration'
       ansible.builtin.debug:
@@ -68,7 +68,7 @@
 
     - name: Upload requirements
       copy:
-        src: env/requirements.txt
+        src: requirements.txt
         dest: "{{ aws.instance.download.dir.path }}"
         mode: '0644'
 
@@ -169,7 +169,7 @@
         group: "{{ ansible_user }}"
         mode: 488 
         
-    - name: Copy Django environment file
+    - name: Copy environment file
       become: true
       ansible.builtin.template:
         src: django/env.j2
