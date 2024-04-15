@@ -1,4 +1,4 @@
-- name: Deploy Django framework
+- name: Deploy Django framework and web application
   hosts:
     - class_webservices
     

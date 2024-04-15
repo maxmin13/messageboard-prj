@@ -1,4 +1,4 @@
-- name: Deploy Django framework
+- name: Deploy Django web application
   hosts:
     - class_webservices
     
@@ -111,7 +111,7 @@
         command: collectstatic
         project_path: "{{ aws.instance.project.dir.path }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
-              
+             
     - name: Restart Gunicorn
       become: true 
       ansible.builtin.systemd:
@@ -148,7 +148,7 @@
         return_content: true
       register: result
       failed_when: "'Message board posts' not in result.content"          
-            
+         
   post_tasks:
   
     - name: Delete download directory
