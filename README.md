@@ -2,7 +2,7 @@
 
 The project deploys a Django web application in AWS.</br>
 The web application runs in Gunicorn.</br>
-it uses a PostgreSql database.</br>
+It uses a PostgreSql database.</br>
 
 ## Requirements: ##
 
