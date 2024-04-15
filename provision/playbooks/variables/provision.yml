@@ -26,7 +26,7 @@ aws:
        config:
          dir:
            path: "/opt/gunicorn"
-         file: gunicorn.conf
+         file: gunicorn.conf.py
        socket:
          file: 
            path: "/etc/systemd/system/gunicorn.socket"     

@@ -247,7 +247,7 @@
     - name: Copy Gunicorn config file
       become: true
       ansible.builtin.template:
-        src: gunicorn/gunicorn.conf.j2
+        src: gunicorn/gunicorn.conf.py.j2
         dest: "{{ aws.instance.gunicorn.config.dir.path }}/{{ aws.instance.gunicorn.config.file }}"
         mode: 0400  
         
