@@ -219,7 +219,7 @@
         dest: "{{ aws.instance.gunicorn.systemd.socket.file.path }}"
         mode: 0400 
         
-    - name: Remove Gunicorn service file
+    - name: Remove Gunicorn systemd service file
       become: true
       ansible.builtin.file:
         path: "{{ aws.instance.gunicorn.systemd.service.file.path }}"
