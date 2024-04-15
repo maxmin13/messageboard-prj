@@ -67,8 +67,8 @@ cd "${DATACENTER_DIR}"/bin
 
 echo "Creating AWS datacenter ..."
 
-chmod 755 make.sh
-./make.sh
+################chmod 755 make.sh
+######################./make.sh
 
 echo "AWS datacenter created."
 echo "Provisioning the instance ..."
@@ -79,8 +79,8 @@ export MESSAGEBOARD_DIR
 export AWS_DATACENTER_INSTANCE_NAME
 AWS_DATACENTER_INSTANCE_NAME="admin-box"
 
-chmod 755 provision.sh
-./provision.sh
+###################chmod 755 provision.sh
+#####################./provision.sh
 
 echo "AWS datacenter provisioned."
 
