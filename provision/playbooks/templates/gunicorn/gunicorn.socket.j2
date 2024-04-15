@@ -2,7 +2,7 @@
 Description=gunicorn socket
 
 [Socket]
-ListenStream=/run/gunicorn.sock
+ListenStream={{ aws.instance.gunicorn.socket.file.path }}
 
 SocketUser=nginx
 
