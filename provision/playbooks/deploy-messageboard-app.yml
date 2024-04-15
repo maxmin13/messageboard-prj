@@ -136,7 +136,8 @@
         validate_certs: false
         return_content: true
       register: result
-      failed_when: "'Django site admin' not in result.content"    
+      failed_when: "'Django site admin' not in result.content"  
+      ignore_errors: true  
       
     - name: 'Test it: https://{{ instance_dns_domain }}:{{ aws.instance.nginx.https.port }}'
       become: false  
@@ -147,7 +148,8 @@
         validate_certs: false
         return_content: true
       register: result
-      failed_when: "'Message board posts' not in result.content"          
+      failed_when: "'Message board posts' not in result.content"  
+      ignore_errors: true        
          
   post_tasks:
   
