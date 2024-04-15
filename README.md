@@ -69,7 +69,7 @@ rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS insta
 
 *https://messageboard.maxmin.it:8443/admin*
 <br>
-*http://AWS-instance-public-IP-address:8443/admin*
+*https://AWS-instance-public-IP-address:8443/admin*
 
 userid: admin<br>
 password: admin
@@ -78,7 +78,7 @@ password: admin
 ## Access the messageboard webapp at: ##
 
 *https://messageboard.maxmin.it:8443*<br>
-*http://AWS-instance-public-IP-address:8443*
+*https://AWS-instance-public-IP-address:8443*
 
 
 ## Delete the datacenter and the application: ##
