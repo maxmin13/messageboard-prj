@@ -7,6 +7,7 @@
   vars_files:
     - variables/vars.yml
     - variables/provision.yml
+    - variables/secrets.yml
           
   pre_tasks:
   
@@ -18,7 +19,7 @@
       set_fact:
         instance_dns_domain: "{{ datacenter_config | json_query(jquery) }}"
       vars:
-        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"     
+        jquery: "Datacenter.Instances[?Name=='{{ instance_name }}'] | [0].DnsDomain"    
 
     - name: 'Controller host configuration'
       ansible.builtin.debug:
@@ -27,9 +28,9 @@
           - 'SSH user: {{ ansible_user }}'
           - 'SSH key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
-          - 'Django project name: {{ aws.instance.project.django.name }}' 
-          - 'Django super user name: {{ aws.instance.project.django.superuser.name }}' 
-          - 'Django super user email address: {{ aws.instance.project.django.superuser.email.address }}' 
+          - 'Django project name: {{ aws.instance.project.name }}' 
+          - 'Django super user name: {{ aws.instance.project.superuser.name }}' 
+          - 'Django super user email address: {{ aws.instance.project.superuser.email.address }}' 
                  
     - name: Delete download directory
       become: true
@@ -46,12 +47,12 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: 488        
-             
+        mode: 488   
+                 
     - name: Get the project from Github (with agent forwarding)
       become: false
       ansible.builtin.git:
-        repo: "{{ aws.instance.project.django.github.repository.url }}"
+        repo: "{{ aws.instance.project.github.repository.url }}"
         dest: "{{ aws.instance.download.dir.path }}"
         version: master
         accept_hostkey: true
@@ -60,21 +61,21 @@
     - name: Delete project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.django.dir.path }}"
+        path: "{{ aws.instance.project.dir.path }}"
         state: absent 
         
     - name: Create project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.django.dir.path }}"
+        path: "{{ aws.instance.project.dir.path }}"
         state: directory               
  
     - name: Copy project files
       become: true
-      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.django.dir.path }}"
+      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/project/manage.py"
-      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.django.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.name }}" 
       - "{{ aws.instance.download.dir.path }}/project/apps" 
       - "{{ aws.instance.download.dir.path }}/project/templates" 
       
@@ -82,16 +83,16 @@
       become: true
       ansible.builtin.template:
         src: django/settings.py.j2
-        dest: "{{ aws.instance.project.django.dir.path }}/{{ aws.instance.project.django.name }}/settings.py"
+        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/settings.py"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 488 
         
-    - name: Copy Django environment file
+    - name: Copy environment file
       become: true
       ansible.builtin.template:
-        src: django/env.j2
-        dest: "{{ aws.instance.project.django.dir.path }}/.env"
+        src: env/env.j2
+        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/.env"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 0400                
@@ -99,8 +100,8 @@
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ aws.instance.project.django.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"
+        project_path: "{{ aws.instance.project.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
       environment:   
         DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
 
@@ -108,9 +109,9 @@
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ aws.instance.project.django.dir.path }}"  
-        virtualenv: "{{ aws.instance.project.django.venv.dir.path }}"                  
-      
+        project_path: "{{ aws.instance.project.dir.path }}"  
+        virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
+              
     - name: Restart Gunicorn
       become: true 
       ansible.builtin.systemd:
@@ -147,7 +148,7 @@
         return_content: true
       register: result
       failed_when: "'Message board posts' not in result.content"          
-          
+            
   post_tasks:
   
     - name: Delete download directory
