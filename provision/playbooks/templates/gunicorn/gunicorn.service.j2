@@ -6,8 +6,8 @@ After=network.target
 [Service]
 User=root
 Group=root
-WorkingDirectory={{ aws.instance.project.django.dir.path }}
-ExecStart={{ aws.instance.project.venv.dir.path }}/bin/gunicorn --config {{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py {{ aws.instance.project.django.name }}.wsgi
+WorkingDirectory={{ aws.instance.project.dir.path }}
+ExecStart={{ aws.instance.project.venv.dir.path }}/bin/gunicorn --config {{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py {{ aws.instance.project.name }}.wsgi
 
 [Install]
 WantedBy=multi-user.target
