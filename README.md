@@ -16,7 +16,17 @@ The store is a PostgreSql database.</br>
 git clone git@github.com:maxmin13/messageboard-prj.git
 
 
-## Configure the AWS credentials and default region in the controller machine: ##
+## Configure the AWS credentials and default region in your work machine: ##
+
+
+Log into in AWS management console as root, go to Iam, Users, create a new AWS user,
+provide the user with access to the AWS Management Console.</br>
+Select the user and create the access keys for access from the Command Line Interface (CLI).</br>
+Associate the user with an identity-based policy that allows access to route53 webservices, for ex: AmazonRoute53FullAccess.</br>
+Associate the user with an identity-based policy that allows access to ec2 webservices, for ex: AmazonEC2FullAccess.</br>
+
+In you terminal, install AWS Command Line Interface (CLI).</br>
+Enter the access key, the secret access key, your AWS region:
 
 ```
 aws configure
