@@ -24,7 +24,7 @@ aws:
             name: 'postgresql-{{ postgresql_version }}'  
     gunicorn:
        config:
-         file:
+         dir:
            path: "/opt/gunicorn"
        socket:
          file: 
