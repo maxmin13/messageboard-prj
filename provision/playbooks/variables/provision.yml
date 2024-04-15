@@ -26,6 +26,7 @@ aws:
        config:
          dir:
            path: "/opt/gunicorn"
+         file: gunicorn.conf
        socket:
          file: 
            path: "/etc/systemd/system/gunicorn.socket"     
@@ -37,7 +38,8 @@ aws:
          dir:
            path: "/etc/nginx"
       config:
-        file: '/etc/nginx/nginx.conf'
+        file:
+          path: '/etc/nginx/nginx.conf'
       tls:
         dir:
           path: "/etc/nginx/ssl"

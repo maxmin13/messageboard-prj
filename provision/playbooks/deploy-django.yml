@@ -196,14 +196,14 @@
     - name: Remove the Nginx config file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.nginx.config.file }}"
+        path: "{{ aws.instance.nginx.config.file.path }}"
         state: absent
 
     - name: Copy Nginx config file
       become: true
       ansible.builtin.template:
         src: nginx/nginx.conf.j2
-        dest: '{{ aws.instance.nginx.config.file }}'
+        dest: '{{ aws.instance.nginx.config.file.path }}'
         mode: 436
 
     - name: Remove Gunicorn socket file
@@ -247,8 +247,8 @@
     - name: Copy Gunicorn config file
       become: true
       ansible.builtin.template:
-        src: gunicorn/gunicorn.conf.py.j2
-        dest: "{{ aws.instance.gunicorn.config.file.path }}"
+        src: gunicorn/gunicorn.conf.j2
+        dest: "{{ aws.instance.gunicorn.config.dir.path }}/{{ aws.instance.gunicorn.config.file }}"
         mode: 0400  
         
     - name: Restart Gunicorn socket
