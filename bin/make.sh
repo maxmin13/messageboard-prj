@@ -72,8 +72,9 @@ chmod 755 make.sh
 
 echo "AWS datacenter created."
 
-# copy the private key from the datacenter project to the messageboard project.
 cp "${DATACENTER_DIR}"/access/* "${MESSAGEBOARD_DIR}"/access/ 
+
+echo "Private key copied to the messageboard project."
 
 echo "Provisioning the instance ..."
 
