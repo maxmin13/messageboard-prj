@@ -75,6 +75,7 @@ echo "AWS datacenter created."
 cp "${DATACENTER_DIR}"/access/* "${MESSAGEBOARD_DIR}"/access/ 
 
 echo "Private key copied to the messageboard project."
+echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 
 echo "Provisioning the instance ..."
 
