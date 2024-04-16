@@ -31,8 +31,13 @@ SECRET_KEY = (
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["{{ instance_dns_domain }}", "localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://{{ instance_dns_domain }}"]
+
+# all hosts allwed, in case the domain is not valid and there is only a public IP address
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["http://*"]
+
+# ALLOWED_HOSTS = ["{{ instance_dns_domain }}", "localhost"]
+# CSRF_TRUSTED_ORIGINS = ["http://{{ instance_dns_domain }}"]
 
 # Application definition
 
