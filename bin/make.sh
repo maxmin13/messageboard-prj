@@ -80,6 +80,7 @@ echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 echo "Provisioning the instance ..."
 
 # variables for messageboard-prj:name_messageboard_box file:
+export DATACENTER_DIR
 export MESSAGEBOARD_DIR
 
 chmod 755 provision.sh

@@ -1,5 +1,6 @@
 # expected environment variables:
 #
+# DATACENTER_DIR
 # MESSAGEBOARD_DIR
 # AWS_REMOTE_USER
 # AWS_REMOTE_USER_PASSWORD
@@ -8,6 +9,7 @@
 instance_name: "messageboard-box"
 
 # directory where the messageboard project is downloaded from github, used in the messageboard playbooks
+datacenter_dir: "{{ lookup('env','DATACENTER_DIR') }}"
 messageboard_dir: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
 
 ansible_ssh_private_key_file: "{{ messageboard_dir }}/access/{{ instance_name }}"
