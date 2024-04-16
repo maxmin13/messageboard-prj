@@ -71,13 +71,14 @@ chmod 755 make.sh
 ./make.sh
 
 echo "AWS datacenter created."
+
+# copy the private key from the datacenter project to the messageboard project.
+cp "${DATACENTER_DIR}"/access/* "${MESSAGEBOARD_DIR}"/access/ 
+
 echo "Provisioning the instance ..."
 
 # variables for messageboard-prj:name_messageboard_box file:
-export DATACENTER_DIR 
 export MESSAGEBOARD_DIR
-export AWS_DATACENTER_INSTANCE_NAME
-AWS_DATACENTER_INSTANCE_NAME="admin-box"
 
 chmod 755 provision.sh
 ./provision.sh
@@ -93,7 +94,6 @@ echo "Deploying messageboard application ..."
 cd "${MESSAGEBOARD_DIR}"/bin
 
 # variables for messageboard-prj:name_messageboard_box file:
-export DATACENTER_DIR 
 export MESSAGEBOARD_DIR
 
 chmod 755 provision.sh
@@ -101,10 +101,10 @@ chmod 755 provision.sh
 
 cd "${WORKSPACE_DIR}"
 
-#if [[ -d datacenter-prj ]]
-#then
-#  rm -rf datacenter-prj/
-#fi
+if [[ -d datacenter-prj ]]
+then
+  rm -rf datacenter-prj/
+fi
   
 echo "Messageboard application installed."  
   
