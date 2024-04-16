@@ -79,7 +79,7 @@ echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 
 echo "Provisioning the instance ..."
 
-# variables for messageboard-prj:name_messageboard_box file:
+# variables for messageboard-prj:name_messageboard_box file and datacenter playbooks (see: nginx.yml):
 export DATACENTER_DIR
 export MESSAGEBOARD_DIR
 
