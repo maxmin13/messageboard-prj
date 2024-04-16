@@ -7,7 +7,7 @@
 			"Region": "eu-west-1",
 			"Tags": [
 				{
-					"Key": "Class",
+					"Key": "class",
 					"Value": "webservices"
 				}
 			]
@@ -16,7 +16,7 @@
 			"Name": "aws-gateway",
 			"Tags": [
 				{
-					"Key": "Class",
+					"Key": "class",
 					"Value": "webservices"
 				}
 			]
@@ -25,7 +25,7 @@
 			"Name": "aws-routetable",
 			"Tags": [
 				{
-					"Key": "Class",
+					"Key": "class",
 					"Value": "webservices"
 				}
 			]
@@ -38,7 +38,7 @@
 				"Cidr": "10.0.20.0/24",
 				"Tags": [
 					{
-						"Key": "Class",
+						"Key": "class",
 						"Value": "webservices"
 					}
 				]
@@ -94,7 +94,7 @@
 				],
 				"Tags": [
 					{
-					"Key": "Class",
+					"Key": "class",
 					"Value": "webservices"
 					}
 				]
@@ -113,23 +113,23 @@
 				"HostName": "messageboard.maxmin.it",
 				"Tags": [
 					{
-						"Key": "Class",
+						"Key": "class",
 						"Value": "webservices"
 					},
 					{
-						"Key": "Database",
+						"Key": "database",
 						"Value": "postgresql"
 					},
 					{
-						"Key": "Program",
+						"Key": "program",
 						"Value": "python"
 					},
 					{
-						"Key": "Security",
+						"Key": "security",
 						"Value": "openssl"
 					},
 					{
-						"Key": "Webserver",
+						"Key": "webserver",
 						"Value": "nginx"
 					}
 				]
