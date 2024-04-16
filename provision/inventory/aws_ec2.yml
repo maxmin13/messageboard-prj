@@ -1,17 +1,17 @@
 plugin: aws_ec2
 keyed_groups:
-  - key: tags.Name
+  - key: tags.name
     prefix: name
-  - key: tags.Class
+  - key: tags.class
     prefix: class
-  - key: tags.Database
-    prefix: database
-  - key: tags.Security
+  - key: tags.database
+    prefix: database 
+  - key: tags.security
     prefix: security
-  - key: tags.Program
-    prefix: program
-  - key: tags.Webserver
-    prefix: webserver
+  - key: tags.program
+    prefix: program 
+  - key: tags.webserver
+    prefix: webserver            
 filters:
   instance-state-name: running
 compose:
