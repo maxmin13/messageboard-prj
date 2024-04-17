@@ -129,7 +129,7 @@ enter the access key, the secret access key, your AWS region:
 aws configure
 
 #################################################
-# Update the production requirement.txt:
+# Update the AWS production requirement.txt:
 #################################################
 
 cd messageboard-prj
