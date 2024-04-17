@@ -61,7 +61,7 @@ chmod +x make.sh
 ```
 cd messageboard-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i admin-key -p 22 awsadmin@<remote AWS instance IP address>
+rm -f ~/.ssh/known_hosts && ssh -v -i messageboard-box -p 22 awsadmin@<remote AWS instance IP address>
 
 ```
 
