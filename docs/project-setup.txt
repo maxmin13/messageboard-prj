@@ -166,7 +166,7 @@ or:
 https://AWS-instance-public-IP-address:8443
 
 #################################################
-Delete the datacenter and the application:
+Delete the messageboard and the application:
 #################################################
 
 cd messageboard-prj/bin

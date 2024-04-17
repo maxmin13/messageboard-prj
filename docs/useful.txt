@@ -9,6 +9,4 @@ rm -f ~/.ssh/known_hosts && ssh -v -i ../datacenter-prj/access/admin-key -p 22 a
 
 python manage.py makemigrations posts
 
-
-
 python manage.py runserver
