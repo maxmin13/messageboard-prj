@@ -89,9 +89,9 @@ admin
 # load the posts in the Post web application
 http://localhost:8000/
 
-###################################
+#################################################
 # AWS credentials:
-###################################
+#################################################
 
 Login in AWS management console as root,
 go to Iam, Users,
@@ -134,3 +134,42 @@ chmod +x make.sh
 ./make.sh
 
 
+#################################################
+Log in the remote AWS instance:
+#################################################
+
+cd messageboard-prj/access
+
+rm -f ~/.ssh/known_hosts && ssh -v -i messageboard-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@<remote AWS instance IP address>
+
+#################################################
+Access Django admin site at:
+#################################################
+
+https://messageboard.maxmin.it:8443/admin 
+
+or:
+
+https://AWS-instance-public-IP-address:8443/admin
+
+userid: admin
+password: admin
+
+#################################################
+Access the messageboard webapp at:
+#################################################
+
+https://messageboard.maxmin.it:8443
+
+or: 
+
+https://AWS-instance-public-IP-address:8443
+
+#################################################
+Delete the datacenter and the application:
+#################################################
+
+cd messageboard-prj/bin
+chmod +x delete.sh
+
+./delete.sh
