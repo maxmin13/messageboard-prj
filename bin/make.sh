@@ -73,8 +73,12 @@ chmod 755 make.sh
 echo "AWS datacenter created."
 
 # copy the private key from datacenter-prj
-rm -f ${MESSAGEBOARD_DIR}"/access/messageboard-box
-cp "${DATACENTER_DIR}"/access/messageboard-box "${MESSAGEBOARD_DIR}"/access/ 
+private_key_nm='messageboard-box'
+if [[ -f "${DATACENTER_DIR}/access/${private_key_nm}" ]]
+then
+	rm -f "${MESSAGEBOARD_DIR}/access/${private_key_nm}"
+	cp "${DATACENTER_DIR}/access/${private_key_nm}" "${MESSAGEBOARD_DIR}"/access/ 
+fi
 
 echo "Private key copied to the messageboard project."
 echo "Private key directory ${MESSAGEBOARD_DIR}/access"
