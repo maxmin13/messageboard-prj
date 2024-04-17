@@ -159,16 +159,7 @@
       - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.name }}" 
       - "{{ aws.instance.download.dir.path }}/project/apps" 
       - "{{ aws.instance.download.dir.path }}/project/templates" 
-      
-    - name: Copy Django settings.py file
-      become: true
-      ansible.builtin.template:
-        src: django/settings.py.j2
-        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/settings.py"
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: 488 
-        
+              
     - name: Copy environment file
       become: true
       ansible.builtin.template:

@@ -32,7 +32,7 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# all hosts allwed, in case the domain is not valid and there is only a public IP address
+# all hosts allowed, in case the domain is not valid and there is only a public IP address
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["http://*"]
 
