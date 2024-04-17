@@ -146,12 +146,12 @@ python -m pip install boto3~=1.34.62
 python -m pip install Django~=4.2.0
 python -m pip install gunicorn~=21.2.0
 python -m pip install python-dotenv~=1.0.1
-python -m pip install "psycopg2-binary"~=2.9.0
+python -m pip install psycopg2-binary~=2.9.0
 python -m pip install whitenoise~=6.5.0
 python -m pip install dj-database-url~=2.0.0
 
 # freeze them in the production requirement.txt
-# this requirement file will be uploaded to the AWS instance.
+# this requirement file is uploaded to the AWS instance.
 python -m pip freeze > provision/playbooks/files/env/requirements.txt
 
 
@@ -212,7 +212,7 @@ or:
 https://AWS-instance-public-IP-address:8443
 
 #################################################
-# Delete the messageboard and the application:
+# Delete the datacenter and the web application:
 #################################################
 
 cd messageboard-prj/bin
