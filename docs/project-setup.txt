@@ -89,10 +89,48 @@ admin
 # load the posts in the Post web application
 http://localhost:8000/
 
+###################################
+# AWS credentials:
+###################################
+
+Login in AWS management console as root,
+go to Iam, Users,
+create a new user, for ex: awsadmin/awsadmin
+provide the user with access to the AWS Management Console.
+Select the user and create an access key for Command Line Interface (CLI).
+Associate the user with an identity-based policy that allows access to route53 webservices,
+for ex: AmazonRoute53FullAccess
+Associate the user with an identity-based policy that allows access to ec2 webservices,
+for ex: AmazonEC2FullAccess.
+e
+In you terminal, install AWS Command Line Interface (CLI)
+
+enter the access key, the secret access key, your AWS region:
+
+aws configure
+
 #################################################
 # Deploy the web application on AWS:
 #################################################
 
+edit config/datacenter.json and config/hostedzone.json and set the Vpc and DNS values according to your AWS account: 
 
+VPC CIDR (eg: "Cidr": "10.0.0.0/16")
+VPC region (eg: "Region": "eu-west-1")
+Availability zone (eg: "Az": "eu-west-1a")
+Subnet CIDR (eg: "Cidr": "10.0.20.0/24")
+Instance private IP (eg: "PrivateIp": "10.0.20.35")
+Set instance user name and instance user password with your AWS user credentials
+(Not mandatory) DNS registered domain (your domain registered with the AWS registrar, eg: "RegisteredDomain": "maxmin.it")
+
+cd messageboard-prj/bin
+
+export AWS_REMOTE_USER=awsadmin
+export AWS_REMOTE_USER_PASSWORD=awsadmin
+
+run:
+
+chmod +x make.sh
+./make.sh
 
 
