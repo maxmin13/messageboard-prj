@@ -4,7 +4,7 @@ The project deploys a Django web application in AWS.</br>
 The web application runs in Gunicorn.</br>
 It uses a PostgreSql database.</br>
 
-## Requirements: ##
+## Local development machine: ##
 
 - Fedora 38
 - Python 3.11.4
