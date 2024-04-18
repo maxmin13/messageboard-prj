@@ -1,15 +1,15 @@
 
 Configure a local development environment with Eclipse to develop the Django post web application.
 
-#################################################
+###################################################################
 # clone the project from github
-#################################################
+###################################################################
 
 git clone git@github.com:maxmin13/messageboard-prj.git
 
-#################################################
+###################################################################
 # configure the project in eclipse
-#################################################
+###################################################################
 
 install eclipse pydev plugin from marketplace.
 
@@ -21,9 +21,9 @@ Enter a project name
 Uncheck "use default location" and set the location to the top directory of the messageboard-prj
 Click Finish
 
-#################################################
-# create a virtual environment with python 3.11:
-#################################################
+###################################################################
+# create a local development virtual environment with python 3.11:
+###################################################################
 
 cd messageboard-prj
 
@@ -46,9 +46,9 @@ python -m pip install black~=23.7.0
 python -m pip install flake8
 python -m pip install pycodestyle
                                         
-#################################################
-# Using PyDev with virtualenv
-#################################################
+###################################################################
+# Using Eclipse PyDev with virtualenv
+###################################################################
 
 add the interpreter from the virtual environment as another Python interpreter:
 
@@ -69,9 +69,9 @@ Under Interpreter, select your new interpreter
 Click Apply and Close
 
 
-#################################################
+###################################################################
 # Run the Django webapplication locally:
-#################################################
+###################################################################
 
 cd messageboard-prj
 source .venv/bin/activate
@@ -90,9 +90,9 @@ admin
 http://localhost:8000/
 
 
-#################################################
+###################################################################
 # install pgAdmin (Postgress management tool)
-#################################################
+###################################################################
 
 right click on Servers
 Register, Server
@@ -108,9 +108,9 @@ Password: secret
 
 Save
 
-#################################################
+###################################################################
 # AWS credentials:
-#################################################
+###################################################################
 
 Login in AWS management console as root,
 go to Iam, Users,
@@ -128,9 +128,9 @@ enter the access key, the secret access key, your AWS region:
 
 aws configure
 
-#################################################
+###################################################################
 # Update the AWS production requirement.txt:
-#################################################
+###################################################################
 
 cd messageboard-prj
 
@@ -152,12 +152,12 @@ python -m pip install dj-database-url~=2.0.0
 
 # freeze them in the production requirement.txt
 # this requirement file is uploaded to the AWS instance.
-python -m pip freeze > provision/playbooks/files/env/requirements.txt
+python -m pip freeze > provision/playbooks/files/requirements.txt
 
 
-#################################################
+###################################################################
 # Deploy the web application on AWS:
-#################################################
+###################################################################
 
 edit config/datacenter.json and config/hostedzone.json and set the Vpc and DNS values according to your AWS account: 
 
@@ -180,17 +180,17 @@ chmod +x make.sh
 ./make.sh
 
 
-#################################################
+###################################################################
 # Log in the remote AWS instance:
-#################################################
+###################################################################
 
 cd messageboard-prj/access
 
 rm -f ~/.ssh/known_hosts && ssh -v -i messageboard-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@<remote AWS instance IP address>
 
-#################################################
+###################################################################
 # Access Django admin site at:
-#################################################
+###################################################################
 
 https://messageboard.maxmin.it:8443/admin 
 
@@ -201,9 +201,9 @@ https://AWS-instance-public-IP-address:8443/admin
 userid: admin
 password: admin
 
-#################################################
+###################################################################
 # Access the messageboard webapp at:
-#################################################
+###################################################################
 
 https://messageboard.maxmin.it:8443
 
@@ -211,9 +211,9 @@ or:
 
 https://AWS-instance-public-IP-address:8443
 
-#################################################
+###################################################################
 # Delete the datacenter and the web application:
-#################################################
+###################################################################
 
 cd messageboard-prj/bin
 chmod +x delete.sh
