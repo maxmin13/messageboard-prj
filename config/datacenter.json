@@ -103,8 +103,8 @@
 		"Instances": [
 			{
 				"Name": "messageboard-box",
-				"UserName": "maxmin123",
-				"UserPassword": "maxmin@123",
+				"UserName": "awsadmin",
+				"UserPassword": "awsadmin",
 				"PrivateIp": "10.0.20.35",
 				"SecurityGroup": "messageboard-sgp",
 				"Subnet": "messageboard-subnet",
