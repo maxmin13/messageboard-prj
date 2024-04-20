@@ -91,11 +91,9 @@ cd "${MESSAGEBOARD_DIR}"/bin
 chmod 755 provision.sh
 ./provision.sh
 
-cd "${WORKSPACE_DIR}"
-
-if [[ -d datacenter-prj ]]
+if [[ -d "${DATACENTER_DIR}" ]]
 then
-  rm -rf datacenter-prj/
+  rm -rf "${DATACENTER_DIR}"
 fi
   
 echo "Messageboard application installed."  
