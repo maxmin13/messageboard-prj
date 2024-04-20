@@ -24,9 +24,9 @@
     - name: 'Controller host configuration'
       ansible.builtin.debug:
         msg:
-          - 'SSH port: {{ ansible_port }}'
-          - 'SSH user: {{ ansible_user }}'
-          - 'SSH key: {{ ansible_private_key_file }}'
+          - 'SSH instance port: {{ ansible_port }}'
+          - 'SSH instance user: {{ ansible_user }}'
+          - 'SSH instance key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
           - 'Django project name: {{ aws.instance.project.name }}' 
           - 'Django super user name: {{ aws.instance.project.superuser.name }}' 
