@@ -20,24 +20,6 @@ set -o pipefail
 set -o nounset
 set +o xtrace
 
-if [[ ! -v AWS_ACCESS_KEY_ID ]]
-then
-  echo "ERROR: environment variable AWS_ACCESS_KEY_ID not set!"
-  exit 1
-fi
-
-if [[ ! -v AWS_SECRET_ACCESS_KEY ]]
-then
-  echo "ERROR: environment variable AWS_SECRET_ACCESS_KEY not set!"
-  exit 1
-fi
-
-if [[ ! -v AWS_DEFAULT_REGION ]]
-then
-  echo "ERROR: environment variable AWS_DEFAULT_REGION not set!"
-  exit 1
-fi
-
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 
 # directory where the datacenter project is downloaded from github
@@ -89,10 +71,7 @@ echo "Private key copied to the messageboard project."
 echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 echo "Provisioning the instance ..."
 
-# variables for messageboard-prj:name_messageboard_box file and datacenter playbooks (see: nginx.yml):
 export DATACENTER_DIR
-export MESSAGEBOARD_DIR
-
 cd "${DATACENTER_DIR}"/bin
 chmod 755 provision.sh
 ./provision.sh

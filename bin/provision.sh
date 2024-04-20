@@ -6,39 +6,67 @@ set -o pipefail
 set -o nounset
 set +o xtrace
 
-###########################################################################
-## The script installs the messageboard application on an existing AWS 
-## datacenter using Ansible.
-## Ansible connects to the instances with SSH connection plugin.
-## Ansible uses Dynamic inventory plugin aws_ec2 to create a dynamic 
+#########################################################################
+## The script provisions an AWS instance using Ansible.
+## Ansible connects to the instances with an SSH connection plugin.
+## Ansible is configured to use the Dynamic inventory plugin aws_ec2 to create a dynamic 
 ## inventory of the AWS instances.
-## see: ansible.cfg, transport=ssh, enable_plugins = aws_ec2
+## see: ansible.cfg file
 ##
 ## run:
 ##
-## export AWS_REMOTE_USER=awsadmin
-## export AWS_REMOTE_USER_PASSWORD=awsadmin
-## export MESSAGEBOARD_DIR=<ex: /home/vagrant/workspace/messageboard-prj >   
-## export DATACENTER_DIR=<ex: /home/vagrant/workspace/datacenter-prj >  
+## AWS IAM user credentials
+## export AWS_ACCESS_KEY_ID=xxxxxx
+## export AWS_SECRET_ACCESS_KEY=yyyyyy
+## export AWS_DEFAULT_REGION=zzzzzz
+##
+## Instance user credentials associated with the private key when the instance was created.
+## export AWS_INSTANCE_USER=<see: datacenter.json UserName field>
+## export AWS_INSTANCE_USER_PASSWORD=<see: datacenter.json UserPassword field>
+##
+## export DATACENTER_DIR=<directory where the datacenter project is cloned>
 ##
 ## ./provision.sh 
 ##
-###########################################################################
+#########################################################################
 
-if [[ ! -v AWS_REMOTE_USER ]]
+# AWS IAM user credientials
+if [[ ! -v AWS_ACCESS_KEY_ID ]]
 then
-  echo "ERROR: environment variable AWS_REMOTE_USER not set!"
+  echo "ERROR: environment variable AWS_ACCESS_KEY_ID not set!"
   exit 1
 fi
 
-if [[ ! -v AWS_REMOTE_USER_PASSWORD ]]
+if [[ ! -v AWS_SECRET_ACCESS_KEY ]]
 then
-  echo "ERROR: environment variable AWS_REMOTE_USER_PASSWORD not set!"
+  echo "ERROR: environment variable AWS_SECRET_ACCESS_KEY not set!"
+  exit 1
+fi
+
+if [[ ! -v AWS_DEFAULT_REGION ]]
+then
+  echo "ERROR: environment variable AWS_DEFAULT_REGION not set!"
+  exit 1
+fi
+
+# AWS instance credentials associated with the primary key
+# see: name_messageboard_box and datacenter.json
+if [[ ! -v AWS_INSTANCE_USER ]]
+then
+  echo "ERROR: environment variable AWS_INSTANCE_USER not set!"
+  exit 1
+fi
+
+# AWS instance user credentials associated with the primary key
+# see: name_messageboard_box and datacenter.json
+if [[ ! -v AWS_INSTANCE_USER_PASSWORD ]]
+then
+  echo "ERROR: environment variable AWS_INSTANCE_USER_PASSWORD not set!"
   exit 1
 fi
 
 # directory where the datacenter project is downloaded from github
-# see: name_admin_box file
+# see: name_messageboard_box file
 if [[ ! -v DATACENTER_DIR ]]
 then
   echo "ERROR: environment variable DATACENTER_DIR not set!"
@@ -47,11 +75,8 @@ fi
 
 # directory where the messageboard project is downloaded from github
 # see: name_messageboard_box file
-if [[ ! -v MESSAGEBOARD_DIR ]]
-then
-  echo "ERROR: environment variable MESSAGEBOARD_DIR not set!"
-  exit 1
-fi
+export MESSAGEBOARD_DIR
+MESSAGEBOARD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd .. && pwd)"
 
 echo "Creating messageboard virtual environment ..."
 
