@@ -11,7 +11,7 @@
 # export AWS_SECRET_ACCESS_KEY=yyyyyy
 # export AWS_DEFAULT_REGION=zzzzzz
 #
-#    ./make.sh
+# ./make.sh
 #
 ##############################################################################
 

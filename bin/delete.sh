@@ -10,7 +10,7 @@
 # export AWS_SECRET_ACCESS_KEY=yyyyyy
 # export AWS_DEFAULT_REGION=zzzzzz
 #
-#    ./delete.sh
+# ./delete.sh
 #
 ##############################################################################
 
@@ -22,8 +22,10 @@ set +o xtrace
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 
 # directory where the datacenter project is downloaded from github
-# see: name_messageboard_box file
 DATACENTER_DIR="${WORKSPACE_DIR}"/datacenter-prj
+
+# directory where the messagboard project is downloaded from github
+MESSAGEBOARD_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
 export DATACENTER_DIR
 
@@ -56,3 +58,4 @@ chmod 755 delete.sh
 
 echo "AWS datacenter deleted."
 
+  
