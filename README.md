@@ -1,9 +1,9 @@
 # AWS messageboard project
 
-The project deploys a Django web application in AWS.</br>
-The web application runs in Gunicorn backed by a PostgreSql database.</br>
+The project deploys a Django web application to AWS.</br>
+The web application runs on Gunicorn HTTP server backed by a PostgreSql database.</br>
 
-## Local development machine: ##
+## Local work machine requirements: ##
 
 - Fedora 38
 - Python 3.11.4
@@ -11,12 +11,12 @@ The web application runs in Gunicorn backed by a PostgreSql database.</br>
 
 ## Configure the AWS credentials and default region in your work machine: ##
 
-Log into in AWS management console as root, go to Iam, Users, create a new AWS IAM user,
-provide the user with access to the AWS Management Console.</br>
+Log into AWS management console as root, go to IAM, Users, create a new user.</br>
+Provide the user with access to the AWS Management Console.</br>
 Select the user and create the access keys for access from the Command Line Interface (CLI).</br>
 Associate the user with an identity-based policy that allows access to route53 webservices, for ex: AmazonRoute53FullAccess.</br>
 Associate the user with an identity-based policy that allows access to ec2 webservices, for ex: AmazonEC2FullAccess.</br>
-The access key, the secret access key, the AWS region associated with the AWS IAM user have to be exported before running the scripts.
+The access key, the secret access key, the AWS region associated with the user have to be exported before running the scripts.
 
 
 ## Clone the project: ##
