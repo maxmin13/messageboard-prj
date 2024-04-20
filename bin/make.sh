@@ -30,6 +30,9 @@ DATACENTER_DIR="${WORKSPACE_DIR}"/datacenter-prj
 # see: name_messageboard_box file
 MESSAGEBOARD_DIR="${WORKSPACE_DIR}"/messageboard-prj
 
+export MESSAGEBOARD_DIR
+export DATACENTER_DIR
+
 #######################################
 # DATACENTER ENVIRONMENT AND INSTANCE #
 #######################################
@@ -60,8 +63,6 @@ chmod 755 make.sh
 echo "AWS datacenter created."
 echo "Provisioning the instance ..."
 
-export MESSAGEBOARD_DIR
-
 cd "${DATACENTER_DIR}"/bin
 chmod 755 provision.sh
 ./provision.sh
@@ -86,9 +87,6 @@ echo "Private key copied to the messageboard project."
 echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 
 cd "${MESSAGEBOARD_DIR}"/bin
-
-# variables for messageboard-prj:name_messageboard_box file:
-export DATACENTER_DIR
 
 chmod 755 provision.sh
 ./provision.sh

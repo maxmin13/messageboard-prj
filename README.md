@@ -1,8 +1,7 @@
 # AWS messageboard project
 
 The project deploys a Django web application in AWS.</br>
-The web application runs in Gunicorn.</br>
-It uses a PostgreSql database.</br>
+The web application runs in Gunicorn backed by a PostgreSql database.</br>
 
 ## Local development machine: ##
 
@@ -17,14 +16,8 @@ provide the user with access to the AWS Management Console.</br>
 Select the user and create the access keys for access from the Command Line Interface (CLI).</br>
 Associate the user with an identity-based policy that allows access to route53 webservices, for ex: AmazonRoute53FullAccess.</br>
 Associate the user with an identity-based policy that allows access to ec2 webservices, for ex: AmazonEC2FullAccess.</br>
+The access key, the secret access key, the AWS region associated with the AWS IAM user have to be exported before running the scripts.
 
-In you terminal, enter the access key, the secret access key, the AWS region associated with the AWS IAM user, ex:
-
-```
-export AWS_ACCESS_KEY_ID=xxxxxx
-export AWS_SECRET_ACCESS_KEY=yyyyyy
-export AWS_DEFAULT_REGION=eu-west-1
-```
 
 ## Clone the project: ##
 
@@ -46,6 +39,12 @@ to your AWS account: <br>
 ## Install the web application: ##
 
 ```
+export AWS_ACCESS_KEY_ID=<AWS IAM user credentials>
+export AWS_SECRET_ACCESS_KEY=<AWS IAM user credentials>
+export AWS_DEFAULT_REGION=<AWS IAM user credentials>
+export AWS_INSTANCE_USER=<instance user-name associated with the instance primary key, see: datacenter.json UserName field>
+export AWS_INSTANCE_USER_PASSWORD=<instance user-password associated with the instance primary key, see: datacenter.json UserName field>
+
 cd messageboard-prj/bin
 chmod +x make.sh
 
@@ -55,10 +54,10 @@ chmod +x make.sh
 ## Log in the remote AWS instance: ##
 
 ```
+// log into the remote instance, with your AWS user and the public IP assigned to the AWS instance, ex:
 cd messageboard-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i messageboard-box -p 22 <remote AWS instance user pwd, eg: awsadmin>@<remote AWS instance IP address>
-
+rm -f ~/.ssh/known_hosts && ssh -v -i <instance private key, eg: messageboard-box> -p 22 <instance user, see datacenter.json, eg: msgadmin>@176.34.196.38
 ```
 
 ## Access Django admin site at: ##
@@ -80,6 +79,12 @@ password: admin
 ## Delete the datacenter and the application: ##
 
 ```
+export AWS_ACCESS_KEY_ID=<AWS IAM user credentials>
+export AWS_SECRET_ACCESS_KEY=<AWS IAM user credentials>
+export AWS_DEFAULT_REGION=<AWS IAM user credentials>
+export AWS_INSTANCE_USER=<instance user-name associated with the instance primary key, see: datacenter.json UserName field>
+export AWS_INSTANCE_USER_PASSWORD=<instance user-password associated with the instance primary key, see: datacenter.json UserName field>
+
 cd messageboard-prj/bin
 chmod +x delete.sh
 
