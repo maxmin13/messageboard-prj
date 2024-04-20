@@ -9,21 +9,21 @@ It uses a PostgreSql database.</br>
 - Fedora 38
 - Python 3.11.4
 - ansible 2.14.5
-- aws-cli/2.13.0
 
 ## Configure the AWS credentials and default region in your work machine: ##
 
-Log into in AWS management console as root, go to Iam, Users, create a new AWS user,
+Log into in AWS management console as root, go to Iam, Users, create a new AWS IAM user,
 provide the user with access to the AWS Management Console.</br>
 Select the user and create the access keys for access from the Command Line Interface (CLI).</br>
 Associate the user with an identity-based policy that allows access to route53 webservices, for ex: AmazonRoute53FullAccess.</br>
 Associate the user with an identity-based policy that allows access to ec2 webservices, for ex: AmazonEC2FullAccess.</br>
 
-In you terminal, install AWS Command Line Interface (CLI).</br>
-Enter the access key, the secret access key, your AWS region:
+In you terminal, enter the access key, the secret access key, the AWS region associated with the AWS IAM user, ex:
 
 ```
-aws configure
+export AWS_ACCESS_KEY_ID=xxxxxx
+export AWS_SECRET_ACCESS_KEY=yyyyyy
+export AWS_DEFAULT_REGION=eu-west-1
 ```
 
 ## Clone the project: ##
@@ -40,16 +40,12 @@ to your AWS account: <br>
 * Availability zone (eg: "Az": "eu-west-1a")<br>
 * Subnet CIDR (eg: "Cidr": "10.0.20.0/24")<br>
 * Instance private IP (eg: "PrivateIp": "10.0.20.35")<br>
-* Set instance user name and instance user password with your AWS user credentials<br>
 * (Not mandatory) DNS registered domain (your domain registered with the AWS registrar, eg: "RegisteredDomain": "maxmin.it")<br>
 
 
 ## Install the web application: ##
 
 ```
-export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
-export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
-
 cd messageboard-prj/bin
 chmod +x make.sh
 
