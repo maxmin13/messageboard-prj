@@ -19,17 +19,14 @@ set -o pipefail
 set -o nounset
 set +o xtrace
 
-if [[ ! -v AWS_REMOTE_USER ]]
-then
-  echo "ERROR: environment variable AWS_REMOTE_USER not set!"
-  exit 1
-fi
 
-if [[ ! -v AWS_REMOTE_USER_PASSWORD ]]
-then
-  echo "ERROR: environment variable AWS_REMOTE_USER_PASSWORD not set!"
-  exit 1
-fi
+
+
+
+
+
+
+
 
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 
