@@ -69,11 +69,9 @@ cp "${MESSAGEBOARD_DIR}/config/hostedzone.json" "${DATACENTER_DIR}"/config
 cp "${MESSAGEBOARD_DIR}/provision/inventory/group_vars/name_messageboard_box" "${DATACENTER_DIR}"/provision/inventory/group_vars
 
 echo "Datacenter config files set."
-
-cd "${DATACENTER_DIR}"/bin
-
 echo "Creating AWS datacenter ..."
 
+cd "${DATACENTER_DIR}"/bin
 chmod 755 make.sh
 ./make.sh
 
@@ -89,13 +87,13 @@ fi
 
 echo "Private key copied to the messageboard project."
 echo "Private key directory ${MESSAGEBOARD_DIR}/access"
-
 echo "Provisioning the instance ..."
 
 # variables for messageboard-prj:name_messageboard_box file and datacenter playbooks (see: nginx.yml):
 export DATACENTER_DIR
 export MESSAGEBOARD_DIR
 
+cd "${DATACENTER_DIR}"/bin
 chmod 755 provision.sh
 ./provision.sh
 
