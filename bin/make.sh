@@ -6,9 +6,10 @@
 # application.
 #
 # run:
-##
-## export AWS_REMOTE_USER=<remote AWS instance user, eg: awsadmin>
-## export AWS_REMOTE_USER_PASSWORD=<remote AWS instance user pwd, eg: awsadmin>
+#
+# export AWS_ACCESS_KEY_ID=xxxxxx
+# export AWS_SECRET_ACCESS_KEY=yyyyyy
+# export AWS_DEFAULT_REGION=zzzzzz
 #
 #    ./make.sh
 #
@@ -19,14 +20,23 @@ set -o pipefail
 set -o nounset
 set +o xtrace
 
+if [[ ! -v AWS_ACCESS_KEY_ID ]]
+then
+  echo "ERROR: environment variable AWS_ACCESS_KEY_ID not set!"
+  exit 1
+fi
 
+if [[ ! -v AWS_SECRET_ACCESS_KEY ]]
+then
+  echo "ERROR: environment variable AWS_SECRET_ACCESS_KEY not set!"
+  exit 1
+fi
 
-
-
-
-
-
-
+if [[ ! -v AWS_DEFAULT_REGION ]]
+then
+  echo "ERROR: environment variable AWS_DEFAULT_REGION not set!"
+  exit 1
+fi
 
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../.. && pwd)"
 
