@@ -2,8 +2,8 @@
 #
 # DATACENTER_DIR
 # MESSAGEBOARD_DIR
-# AWS_REMOTE_USER
-# AWS_REMOTE_USER_PASSWORD
+# AWS_INSTANCE_USER
+# AWS_INSTANCE_USER_PASSWORD
 
 # tag 'Name' in the messageboard AWS instance 
 instance_name: "messageboard-box"
@@ -15,6 +15,6 @@ datacenter_dir: "{{ lookup('env','DATACENTER_DIR') }}"
 messageboard_dir: "{{ lookup('env','MESSAGEBOARD_DIR') }}"
 
 ansible_ssh_private_key_file: "{{ messageboard_dir }}/access/{{ instance_name }}"
-ansible_user: "{{ lookup('env','AWS_REMOTE_USER') }}" 
-ansible_password: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"
-ansible_sudo_pass: "{{ lookup('env','AWS_REMOTE_USER_PASSWORD') }}"
+ansible_user: "{{ lookup('env','AWS_INSTANCE_USER') }}" 
+ansible_password: "{{ lookup('env','AWS_INSTANCE_USER_PASSWORD') }}"
+ansible_sudo_pass: "{{ lookup('env','AWS_INSTANCE_USER_PASSWORD') }}"
