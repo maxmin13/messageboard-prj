@@ -12,7 +12,7 @@ The web application runs on Gunicorn HTTP server backed by a PostgreSql database
 ## Configure the AWS credentials and default region in your work machine: ##
 
 Log into AWS management console as root, go to IAM, Users, create a new user.</br>
-Select the user and create the access keys for access from the Command Line Interface (CLI).</br>
+Select the user and create the access keys.</br>
 Associate the user with an identity-based policy that allows access to route53 webservices, for ex: AmazonRoute53FullAccess.</br>
 Associate the user with an identity-based policy that allows access to ec2 webservices, for ex: AmazonEC2FullAccess.</br>
 The access key, the secret access key, the AWS region associated with the user have to be exported before running the scripts.
