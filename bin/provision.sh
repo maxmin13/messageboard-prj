@@ -20,10 +20,6 @@ set +o xtrace
 ## export AWS_SECRET_ACCESS_KEY=yyyyyy
 ## export AWS_DEFAULT_REGION=zzzzzz
 ##
-## Instance user credentials associated with the private key when the instance was created.
-## export AWS_INSTANCE_USER=<see: datacenter.json UserName field>
-## export AWS_INSTANCE_USER_PASSWORD=<see: datacenter.json UserPassword field>
-##
 ## export DATACENTER_DIR=<directory where the datacenter project is cloned>
 ##
 ## ./provision.sh 
@@ -46,22 +42,6 @@ fi
 if [[ ! -v AWS_DEFAULT_REGION ]]
 then
   echo "ERROR: environment variable AWS_DEFAULT_REGION not set!"
-  exit 1
-fi
-
-# AWS instance credentials associated with the primary key
-# see: name_messageboard_box and datacenter.json
-if [[ ! -v AWS_INSTANCE_USER ]]
-then
-  echo "ERROR: environment variable AWS_INSTANCE_USER not set!"
-  exit 1
-fi
-
-# AWS instance user credentials associated with the primary key
-# see: name_messageboard_box and datacenter.json
-if [[ ! -v AWS_INSTANCE_USER_PASSWORD ]]
-then
-  echo "ERROR: environment variable AWS_INSTANCE_USER_PASSWORD not set!"
   exit 1
 fi
 

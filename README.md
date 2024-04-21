@@ -42,8 +42,6 @@ to your AWS account: <br>
 export AWS_ACCESS_KEY_ID=<AWS IAM user credentials>
 export AWS_SECRET_ACCESS_KEY=<AWS IAM user credentials>
 export AWS_DEFAULT_REGION=<AWS IAM user credentials>
-export AWS_INSTANCE_USER=<instance user-name associated with the instance primary key, see: datacenter.json UserName field>
-export AWS_INSTANCE_USER_PASSWORD=<instance user-password associated with the instance primary key, see: datacenter.json UserName field>
 
 cd messageboard-prj/bin
 chmod +x make.sh
@@ -82,8 +80,6 @@ password: admin
 export AWS_ACCESS_KEY_ID=<AWS IAM user credentials>
 export AWS_SECRET_ACCESS_KEY=<AWS IAM user credentials>
 export AWS_DEFAULT_REGION=<AWS IAM user credentials>
-export AWS_INSTANCE_USER=<instance user-name associated with the instance primary key, see: datacenter.json UserName field>
-export AWS_INSTANCE_USER_PASSWORD=<instance user-password associated with the instance primary key, see: datacenter.json UserName field>
 
 cd messageboard-prj/bin
 chmod +x delete.sh
