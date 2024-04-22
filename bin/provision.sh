@@ -58,7 +58,7 @@ fi
 export MESSAGEBOARD_DIR
 MESSAGEBOARD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd .. && pwd)"
 
-echo "Creating messageboard virtual environment ..."
+echo "Creating local messageboard virtual environment ..."
 
 {
     python -m venv "${MESSAGEBOARD_DIR}"/.venv
@@ -67,7 +67,7 @@ echo "Creating messageboard virtual environment ..."
     deactivate
 } > /dev/null
 
-echo "Messageboard virtual environment created."
+echo "Local messageboard virtual environment created."
 
 ANSIBLE_PLAYBOOK_CMD="${MESSAGEBOARD_DIR}"/.venv/bin/ansible-playbook
 
