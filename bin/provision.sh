@@ -65,8 +65,9 @@ echo "Creating local messageboard virtual environment ..."
     source "${MESSAGEBOARD_DIR}"/.venv/bin/activate
     python3 -m pip install -r "${MESSAGEBOARD_DIR}"/requirements.txt
     deactivate
-    echo "Local messageboard virtual environment created."
 } > /dev/null
+
+echo "Local messageboard virtual environment created."
 
 ANSIBLE_PLAYBOOK_CMD="${MESSAGEBOARD_DIR}"/.venv/bin/ansible-playbook
 
