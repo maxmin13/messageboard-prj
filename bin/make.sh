@@ -69,9 +69,9 @@ then
 	rm -f "${MESSAGEBOARD_DIR}/access/${private_key_nm}"
 	cp "${DATACENTER_DIR}/access/${private_key_nm}" "${MESSAGEBOARD_DIR}"/access/ 
 	echo "Private key copied to the messageboard project."
-        echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 fi
 
+echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 echo "Provisioning the instance ..."
 
 cd "${DATACENTER_DIR}"/bin
