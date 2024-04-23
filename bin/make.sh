@@ -68,6 +68,8 @@ if [[ -f "${DATACENTER_DIR}/access/${private_key_nm}" ]]
 then
 	rm -f "${MESSAGEBOARD_DIR}/access/${private_key_nm}"
 	cp "${DATACENTER_DIR}/access/${private_key_nm}" "${MESSAGEBOARD_DIR}"/access/ 
+	echo "Private key copied to the messageboard project."
+        echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 fi
 
 echo "Provisioning the instance ..."
@@ -83,8 +85,6 @@ echo "AWS datacenter provisioned."
 ###########################
 
 echo "Deploying messageboard application ..."
-echo "Private key copied to the messageboard project."
-echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 
 cd "${MESSAGEBOARD_DIR}"/bin
 
