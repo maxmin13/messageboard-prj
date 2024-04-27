@@ -175,8 +175,8 @@
         command: migrate
         project_path: "{{ PROJECT_HOME }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-      environment:   
-        DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
+      #environment:   
+      #  DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
 
     - name: Collect static files
       become: true
