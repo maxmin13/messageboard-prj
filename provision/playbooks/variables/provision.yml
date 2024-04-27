@@ -61,7 +61,7 @@ aws:
            path: "/opt/gunicorn"   
        socket:
          file: 
-           path: "/etc/systemd/system/gunicorn.socket"               
+           path: "/run/gunicorn.sock"               
        systemd:
          socket:
            file: 
