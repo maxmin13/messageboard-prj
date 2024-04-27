@@ -35,13 +35,20 @@ aws:
       install:
          dir:
            path: "/etc/nginx"
+      tls:
+        dir:
+          path: "/etc/nginx/ssl/"
+        key:
+          file: "nginx.key"
+        cert:
+          file: "nginx.crt"
       root:
         dir:
           path: "/usr/share/nginx/html"
       http:
         port: "8080"
       https:
-        port: "8443"
+        port: "8443"      
     postgresql:
       version: "14"
       database:
@@ -51,7 +58,11 @@ aws:
     gunicorn:
        config:
          dir:
-           path: "/opt/gunicorn"          
+           path: "/opt/gunicorn"   
+       systemd:
+         socket:
+           file: 
+             path: "/etc/systemd/system/gunicorn.socket"       
     project:
       root:
         dir:

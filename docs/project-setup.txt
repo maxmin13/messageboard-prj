@@ -171,8 +171,9 @@ Set instance user name and instance user password with your AWS user credentials
 
 cd messageboard-prj/bin
 
-export AWS_REMOTE_USER=awsadmin
-export AWS_REMOTE_USER_PASSWORD=awsadmin
+export AWS_ACCESS_KEY_ID=xxxxxx
+export AWS_SECRET_ACCESS_KEY=yyyyyy
+export AWS_DEFAULT_REGION=zzzzzz
 
 run:
 
@@ -214,6 +215,10 @@ https://AWS-instance-public-IP-address:8443
 ###################################################################
 # Delete the datacenter and the web application:
 ###################################################################
+
+export AWS_ACCESS_KEY_ID=xxxxxx
+export AWS_SECRET_ACCESS_KEY=yyyyyy
+export AWS_DEFAULT_REGION=zzzzzz
 
 cd messageboard-prj/bin
 chmod +x delete.sh

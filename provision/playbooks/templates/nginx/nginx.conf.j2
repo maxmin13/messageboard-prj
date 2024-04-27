@@ -29,8 +29,8 @@ http {
 
     server {     
         listen              {{ aws.instance.nginx.https.port }} ssl;
-	    ssl_certificate     {{ aws.instance.nginx.tls.dir.path }}/{{ aws.instance.nginx.cert.file }};
-	    ssl_certificate_key {{ aws.instance.nginx.tls.dir.path }}/{{ aws.instance.nginx.key.file }};
+	    ssl_certificate     {{ aws.instance.nginx.tls.dir.path }}/{{ aws.instance.nginx.tls.cert.file }};
+	    ssl_certificate_key {{ aws.instance.nginx.tls.dir.path }}/{{ aws.instance.nginx.tls.key.file }};
 	    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
 	    ssl_ciphers         HIGH:!aNULL:!MD5;
         
