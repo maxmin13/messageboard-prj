@@ -5,9 +5,12 @@
   gather_facts: false
   
   vars_files:
-    - variables/vars.yml
     - variables/provision.yml
     - variables/secrets.yml
+    
+  vars:
+    ansible_python_interpreter: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }}"    
+    PROJECT_HOME: "{{ aws.instance.programs.install.dir.path }}/{{ aws.instance.project.root.dir.name }}" 
           
   pre_tasks:
   
@@ -28,9 +31,7 @@
           - 'SSH instance user: {{ ansible_user }}'
           - 'SSH instance key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
-          - 'Django project name: {{ aws.instance.project.name }}' 
-          - 'Django super user name: {{ aws.instance.project.superuser.name }}' 
-          - 'Django super user email address: {{ aws.instance.project.superuser.email.address }}' 
+          - 'Python version used in the host: {{ aws.instance.python.version }}'
                  
     - name: Delete download directory
       become: true
@@ -84,34 +85,34 @@
       
     - name: Create database user
       become: true
-      become_user: "{{ aws.instance.postgresql.superuser }}"       
+      become_user: "{{ postgresql_superuser }}"       
       community.general.postgresql_user:
         state: present
-        name: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        name: "{{ postgresql_admin_user_name }}"
         password: "{{ postgresql_admin_user_password }}"
      
     - name: Create the database
       become: true
-      become_user: "{{ aws.instance.postgresql.superuser }}"
+      become_user: "{{ postgresql_superuser }}"
       community.general.postgresql_db:
         name: "{{ aws.instance.postgresql.database.name }}"
-        owner: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        owner: "{{ postgresql_admin_user_name }}"
         encoding: UTF8
    
     - name: Grant user access
       become: true
-      become_user: "{{ aws.instance.postgresql.superuser }}"      
+      become_user: "{{ postgresql_superuser }}"      
       community.general.postgresql_privs:
         type: database
         database: "{{ aws.instance.postgresql.database.name }}"
-        roles: "{{ aws.instance.postgresql.database.user.admin.name }}"
+        roles: "{{ postgresql_admin_user_name }}"
         grant_option: no
         privs: all  
 
     - name: Restart PostgreSql services
       become: true
       ansible.builtin.service:
-        name: '{{ aws.instance.postgresql.systemd.service.name }}'
+        name: "postgresql-14"
         state: restarted
         enabled: true         
  
@@ -142,29 +143,29 @@
     - name: Delete project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ PROJECT_HOME }}"
         state: absent 
         
     - name: Create project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ PROJECT_HOME }}"
         state: directory               
  
     - name: Copy project files
       become: true
-      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
+      ansible.builtin.command: "mv {{ item }} {{ PROJECT_HOME }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/project/manage.py"
-      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/django_project" 
       - "{{ aws.instance.download.dir.path }}/project/apps" 
       - "{{ aws.instance.download.dir.path }}/project/templates" 
               
-    - name: Copy environment file
+    - name: Copy project environment file
       become: true
       ansible.builtin.template:
         src: env/env.j2
-        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/.env"
+        dest: "{{ PROJECT_HOME }}/django_project/.env"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 0400                
@@ -172,55 +173,55 @@
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ aws.instance.project.dir.path }}"  
+        project_path: "{{ PROJECT_HOME }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
+        DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
 
     - name: Collect static files
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ aws.instance.project.dir.path }}"  
+        project_path: "{{ PROJECT_HOME }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
         
     - name: Remove the Nginx config file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.nginx.config.file.path }}"
+        path: '{{ aws.instance.nginx.install.dir.path }}/nginx.conf'
         state: absent
 
     - name: Copy Nginx config file
       become: true
       ansible.builtin.template:
         src: nginx/nginx.conf.j2
-        dest: '{{ aws.instance.nginx.config.file.path }}'
+        dest: '{{ aws.instance.nginx.install.dir.path }}/nginx.conf'
         mode: 436
 
     - name: Remove Gunicorn systemd socket file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.gunicorn.systemd.socket.file.path }}"
+        path: "/etc/systemd/system/gunicorn.socket"
         state: absent
               
     - name: Copy Gunicorn systemd socket file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.socket.j2
-        dest: "{{ aws.instance.gunicorn.systemd.socket.file.path }}"
+        dest: "/etc/systemd/system/gunicorn.socket"
         mode: 0400 
         
     - name: Remove Gunicorn systemd service file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.gunicorn.systemd.service.file.path }}"
+        path: "/etc/systemd/system/gunicorn.service" 
         state: absent        
         
     - name: Copy Gunicorn service file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.service.j2
-        dest: "{{ aws.instance.gunicorn.systemd.service.file.path }}"
+        dest: "/etc/systemd/system/gunicorn.service" 
         mode: 0400   
         
     - name: Delete Gunicorn configuration directory
@@ -239,7 +240,7 @@
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.conf.py.j2
-        dest: "{{ aws.instance.gunicorn.config.dir.path }}/{{ aws.instance.gunicorn.config.file }}"
+        dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn/gunicorn.conf.py"
         mode: 0400  
         
     - name: Restart Gunicorn socket
@@ -293,8 +294,8 @@
       become: true
       community.general.django_manage:
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        project_path: "{{ aws.instance.project.dir.path }}"
-        command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ aws.instance.project.superuser.name }}").count() > 0 else 1)'
+        project_path: "{{ PROJECT_HOME }}"
+        command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ django_superuser_name }}").count() > 0 else 1)'
       register: checksuperuser
       ignore_errors: True
       changed_when: False      
@@ -303,11 +304,11 @@
       become: true
       community.general.django_manage:
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        project_path: "{{ aws.instance.project.dir.path }}"
-        command: "createsuperuser --noinput --username={{ aws.instance.project.superuser.name }} --email={{ aws.instance.project.superuser.email.address }}"     
+        project_path: "{{ PROJECT_HOME }}"
+        command: "createsuperuser --noinput --username={{ django_superuser_name }} --email={{ django_superuser_email_address }}"     
       ignore_errors: True
       environment: 
-        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"
+        DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"
         DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_password }}" 
       when: checksuperuser is not succeeded
       

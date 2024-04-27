@@ -4,63 +4,58 @@ aws:
   instance: 
     download:
       dir:
-        path: /opt/download    
-    python:
+        path: /opt/download  
+    programs:
       install:
         dir:
-          path: /usr/local/bin
-      executable: "{{ python_executable }}"
-      version: "{{ python_version }}"  
-    postgresql:
-        version: "{{ postgresql_version }}"
-        superuser: '{{ postgresql_superuser }}'
-        database:
-          url: "postgres://{{ postgresql_admin_user_name }}:{{ postgresql_admin_user_password }}@localhost/{{ postgresql_database_name }}"
-          name: "{{ postgresql_database_name }}"
-          user:
-            admin: 
-              name: "{{ postgresql_admin_user_name }}"  
-        systemd:   
-          service:
-            name: 'postgresql-{{ postgresql_version }}'  
-    gunicorn:
-       config:
-         dir:
-           path: "/opt/gunicorn"
-         file: gunicorn.conf.py 
-       socket:
-         file:
-           path: /run/gunicorn.sock
-       systemd:
-         socket:
-           file: 
-             path: "/etc/systemd/system/gunicorn.socket"  
-         service:
-           file:
-             path: "/etc/systemd/system/gunicorn.service" 
+          path: /opt   
+    java:
+      version: "18.0.2.1" 
+      root:
+        dir: 
+          name: "jdk-18.0.2.1"                   
+    tomcat:
+      version: "10.1.23"           
+      root:
+        dir:
+          name: apache-tomcat-10.1.23                
+      http:
+        port: "8080"
+      https:
+        port: "8443"              
+    python:
+      version: "3.11.4"   
+      install:
+        dir:
+          path: /usr/local/bin   
+      executable: "python3.11"
+    openssl:
+      version: "1.1.1u"
     nginx:
       install:
          dir:
            path: "/etc/nginx"
-      config:
-        file:
-          path: '/etc/nginx/nginx.conf'
-      tls:
-        dir:
-          path: "/etc/nginx/ssl"
-      key:
-        file: "nginx.key"
-      cert:
-        file: "nginx.crt"
       root:
         dir:
           path: "/usr/share/nginx/html"
+      http:
+        port: "8080"
       https:
-        port: "8443"            
+        port: "8443"
+    postgresql:
+      version: "14"
+      database:
+        name: "postgresqldb"
+        connection:
+          url: "postgres://{{ postgresql_admin_user_name }}:{{ postgresql_admin_user_password }}@localhost/postgresqldb"
+    gunicorn:
+       config:
+         dir:
+           path: "/opt/gunicorn"          
     project:
-      name: "{{ django_project_name }}"
-      dir:
-        path: "/opt/messagebaord"
+      root:
+        dir:
+          name: "messageboard"
       venv:
         dir:
           path: "/opt/.venv"
@@ -71,4 +66,5 @@ aws:
       github:
         repository:
           url: git@github.com:maxmin13/messageboard-prj.git
+          
 ...
