@@ -59,6 +59,9 @@ aws:
        config:
          dir:
            path: "/opt/gunicorn"   
+       socket:
+         file: 
+           path: "/etc/systemd/system/gunicorn.socket"               
        systemd:
          socket:
            file: 
