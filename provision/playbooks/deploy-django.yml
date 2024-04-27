@@ -33,11 +33,11 @@
           - 'AWS instance domain: {{ instance_dns_domain }}'
           - 'Python version used in the host: {{ aws.instance.python.version }}'
                  
-    - name: Delete download directory
-      become: true
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: absent       
+#    - name: Delete download directory
+#      become: true
+#      ansible.builtin.file:
+#        path: "{{ aws.instance.download.dir.path }}"
+#        state: absent       
                   
   tasks:
    
@@ -201,14 +201,14 @@
     - name: Remove Gunicorn systemd socket file
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.gunicorn.socket.file.path }}"
+        path: "{{ aws.instance.gunicorn.systemd.socket.file.path  }}"
         state: absent
               
     - name: Copy Gunicorn systemd socket file
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.socket.j2
-        dest: "{{ aws.instance.gunicorn.socket.file.path }}"
+        dest: "{{ aws.instance.gunicorn.systemd.socket.file.path  }}"
         mode: 0400 
         
     - name: Remove Gunicorn systemd service file
