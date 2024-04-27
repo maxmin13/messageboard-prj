@@ -10,4 +10,4 @@ log_file = "-"
 
 workers = multiprocessing.cpu_count() * 2 + 1
 
-bind = "unix:{{ aws.instance.gunicorn.socket.file.path }}" 
+bind = "unix:{{ aws.instance.gunicorn.systemd.socket.file.path }}" 
