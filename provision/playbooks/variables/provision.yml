@@ -46,6 +46,8 @@ aws:
       version: "14"
       database:
         name: "postgresqldb"
+        connection:
+          url: "postgres://{{ postgresql_admin_user_name }}:{{ postgresql_admin_user_password }}@localhost/postgresqldb"
     gunicorn:
        config:
          dir:
