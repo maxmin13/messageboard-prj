@@ -35,6 +35,9 @@ aws:
       install:
          dir:
            path: "/etc/nginx"
+      root:
+        dir:
+          path: "/usr/share/nginx/html"           
       tls:
         dir:
           path: "/etc/nginx/ssl/"
@@ -42,9 +45,6 @@ aws:
           file: "nginx.key"
         cert:
           file: "nginx.crt"
-      root:
-        dir:
-          path: "/usr/share/nginx/html"
       http:
         port: "8080"
       https:

@@ -34,6 +34,7 @@ http {
 	    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
 	    ssl_ciphers         HIGH:!aNULL:!MD5;
         
+        # html files
         server_name {{ ansible_host }};
         root         {{ aws.instance.nginx.root.dir.path }};
 
@@ -49,7 +50,7 @@ http {
         }
         
         location /staticfiles/ {
-                root {{ aws.instance.project.dir.path }};
+                root {{ PROJECT_HOME }};
         }
 
         # configure nginx as a reverse proxy for gunicorn

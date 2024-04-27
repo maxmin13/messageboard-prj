@@ -240,7 +240,7 @@
       become: true
       ansible.builtin.template:
         src: gunicorn/gunicorn.conf.py.j2
-        dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn/gunicorn.conf.py"
+        dest: "{{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py"
         mode: 0400  
         
     - name: Restart Gunicorn socket
