@@ -57,8 +57,8 @@ echo "Datacenter config files set."
 echo "Creating AWS datacenter ..."
 
 cd "${DATACENTER_DIR}"/bin
-##chmod 755 make.sh
-##./make.sh
+chmod 755 make.sh
+./make.sh
 
 echo "AWS datacenter created."
 
@@ -75,8 +75,8 @@ echo "Private key directory ${MESSAGEBOARD_DIR}/access"
 echo "Provisioning the instance ..."
 
 cd "${DATACENTER_DIR}"/bin
-##chmod 755 provision.sh
-##./provision.sh
+chmod 755 provision.sh
+./provision.sh
 
 echo "AWS datacenter provisioned."
 
