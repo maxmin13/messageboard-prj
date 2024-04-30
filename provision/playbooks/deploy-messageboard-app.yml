@@ -1,4 +1,4 @@
-- name: Deploy Django web application
+- name: Deploy Django framework and web application
   hosts:
     - class_webservices
     
@@ -9,7 +9,8 @@
     - variables/secrets.yml
     
   vars:
-    ansible_python_interpreter: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }}"        
+    ansible_python_interpreter: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }}"    
+    PROJECT_HOME: "{{ aws.instance.programs.install.dir.path }}/{{ aws.instance.project.root.dir.name }}" 
           
   pre_tasks:
   
@@ -31,13 +32,7 @@
           - 'SSH instance key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
           - 'Python version used in the host: {{ aws.instance.python.version }}'
-                 
-    - name: Delete download directory
-      become: true
-      ansible.builtin.file:
-        path: "{{ aws.instance.download.dir.path }}"
-        state: absent       
-                  
+                               
   tasks:
    
     - name: Create download directory
@@ -48,7 +43,7 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 488   
-                 
+                   
     - name: Get the project from Github (with agent forwarding)
       become: false
       ansible.builtin.git:
@@ -61,38 +56,29 @@
     - name: Delete project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ PROJECT_HOME }}"
         state: absent 
         
     - name: Create project directory
       become: true
       ansible.builtin.file:
-        path: "{{ aws.instance.project.dir.path }}"
+        path: "{{ PROJECT_HOME }}"
         state: directory               
  
     - name: Copy project files
       become: true
-      ansible.builtin.command: "mv {{ item }} {{ aws.instance.project.dir.path }}"
+      ansible.builtin.command: "mv {{ item }} {{ PROJECT_HOME }}"
       with_items:
       - "{{ aws.instance.download.dir.path }}/project/manage.py"
-      - "{{ aws.instance.download.dir.path }}/project/{{ aws.instance.project.name }}" 
+      - "{{ aws.instance.download.dir.path }}/project/django_project" 
       - "{{ aws.instance.download.dir.path }}/project/apps" 
       - "{{ aws.instance.download.dir.path }}/project/templates" 
-      
-    - name: Copy Django settings.py file
-      become: true
-      ansible.builtin.template:
-        src: django/settings.py.j2
-        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/settings.py"
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: 488 
-        
-    - name: Copy environment file
+              
+    - name: Copy project environment file
       become: true
       ansible.builtin.template:
         src: env/env.j2
-        dest: "{{ aws.instance.project.dir.path }}/{{ aws.instance.project.name }}/.env"
+        dest: "{{ PROJECT_HOME }}/django_project/.env"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 0400                
@@ -100,18 +86,18 @@
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ aws.instance.project.dir.path }}"  
+        project_path: "{{ PROJECT_HOME }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"
       environment:   
-        DATABASE_URL: "{{ aws.instance.postgresql.database.url }}"      
+        DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
 
     - name: Collect static files
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ aws.instance.project.dir.path }}"  
+        project_path: "{{ PROJECT_HOME }}"  
         virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
-             
+        
     - name: Restart Gunicorn
       become: true 
       ansible.builtin.systemd:
@@ -148,9 +134,9 @@
         validate_certs: false
         return_content: true
       register: result
-      failed_when: "'Message board posts' not in result.content"  
-      ignore_errors: true        
-         
+      failed_when: "'Message board posts' not in result.content" 
+      ignore_errors: true         
+            
   post_tasks:
   
     - name: Delete download directory
