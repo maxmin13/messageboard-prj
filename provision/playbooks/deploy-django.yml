@@ -10,6 +10,7 @@
     
   vars:
     ansible_python_interpreter: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }}"    
+    PYTHON_VERSION: "{{ aws.instance.python.version }}"
     PROJECT_HOME: "{{ aws.instance.programs.install.dir.path }}/{{ aws.instance.project.root.dir.name }}" 
           
   pre_tasks:
@@ -31,7 +32,7 @@
           - 'SSH instance user: {{ ansible_user }}'
           - 'SSH instance key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
-          - 'Python version used in the host: {{ aws.instance.python.version }}'
+          - 'Python version used in the host: {{ PYTHON_VERSION }}'
                                
   tasks:
    
