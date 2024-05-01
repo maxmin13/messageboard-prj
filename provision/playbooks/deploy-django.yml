@@ -32,7 +32,7 @@
           - 'SSH instance user: {{ ansible_user }}'
           - 'SSH instance key: {{ ansible_private_key_file }}'
           - 'AWS instance domain: {{ instance_dns_domain }}'
-          - 'Python version used in the host: {{ PYTHON_VERSION }}'
+          - 'Python version: {{ PYTHON_VERSION }}'
                                
   tasks:
    
