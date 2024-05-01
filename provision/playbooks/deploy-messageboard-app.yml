@@ -1,6 +1,6 @@
 - name: Deploy Django framework and web application
   hosts:
-    - class_webservices
+    - class_djangowebservices
     
   gather_facts: false
   

@@ -123,6 +123,10 @@
 					{
 						"Key": "webserver",
 						"Value": "nginx"
+					},
+					{
+						"Key": "class",
+						"Value": "djangowebservices"
 					}
 				]
 			}
