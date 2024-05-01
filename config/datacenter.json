@@ -113,20 +113,12 @@
 				"HostName": "host.messageboard.maxmin.it",
 				"Tags": [
 					{
-						"Key": "class",
-						"Value": "webservices"
+						"Key": "common",
+						"Value": "programs"
 					},
 					{
 						"Key": "database",
 						"Value": "postgresql"
-					},
-					{
-						"Key": "program",
-						"Value": "python"
-					},
-					{
-						"Key": "security",
-						"Value": "openssl"
 					},
 					{
 						"Key": "webserver",
