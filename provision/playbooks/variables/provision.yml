@@ -1,7 +1,9 @@
 ---
-
 aws:
   instance: 
+    venv:
+      dir:
+        path: /opt/.venv
     download:
       dir:
         path: /opt/download  
@@ -70,9 +72,6 @@ aws:
       root:
         dir:
           name: "messageboard"
-      venv:
-        dir:
-          path: "/opt/.venv"
       superuser:
         name: "{{ django_superuser_name }}"
         email:

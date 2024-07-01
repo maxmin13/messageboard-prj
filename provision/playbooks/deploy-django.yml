@@ -9,7 +9,7 @@
     - variables/secrets.yml
     
   vars:
-    ansible_python_interpreter: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }}"    
+    ansible_python_interpreter: "{{ aws.instance.venv.dir.path }}/bin/python"   
     PYTHON_VERSION: "{{ aws.instance.python.version }}"
     PROJECT_HOME: "{{ aws.instance.programs.install.dir.path }}/{{ aws.instance.project.root.dir.name }}" 
           
@@ -44,13 +44,7 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 488   
-        
-    - name: Delete virtualenv directory
-      become: true
-      ansible.builtin.file:
-        path: "{{ aws.instance.project.venv.dir.path }}"
-        state: absent          
-   
+                 
     - name: Create virtualenv
       become: true
       ansible.builtin.pip:
@@ -59,8 +53,8 @@
           - wheel
           - setuptools
         state: latest
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"      
+        virtualenv: "{{ aws.instance.venv.dir.path }}"
+        virtualenv_command: "{{ aws.instance.python.install.dir.path }}/{{ aws.instance.python.executable }} -m venv"         
 
     - name: Upload requirements
       copy:
@@ -71,12 +65,8 @@
     - name: Install required packages
       become: true
       ansible.builtin.pip:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
-        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"
-
-    - name: Install psycopg2 for ansible to be able to create postgresql users
-      become: true
-      pip: name=psycopg2-binary
+        virtualenv: "{{ aws.instance.venv.dir.path }}"
+        requirements: "{{ aws.instance.download.dir.path }}/requirements.txt"  
       
     - name: Create database user
       become: true
@@ -169,7 +159,6 @@
       community.general.django_manage:
         command: migrate
         project_path: "{{ PROJECT_HOME }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
       environment:   
         DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
 
@@ -177,8 +166,7 @@
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ PROJECT_HOME }}"  
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"                  
+        project_path: "{{ PROJECT_HOME }}"               
         
     - name: Remove the Nginx config file
       become: true
@@ -294,7 +282,6 @@
     - name: Check Django admin app superuser exists
       become: true
       community.general.django_manage:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         project_path: "{{ PROJECT_HOME }}"
         command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ django_superuser_name }}").count() > 0 else 1)'
       register: checksuperuser
@@ -304,7 +291,6 @@
     - name: Create Django admin app superuser
       become: true
       community.general.django_manage:
-        virtualenv: "{{ aws.instance.project.venv.dir.path }}"
         project_path: "{{ PROJECT_HOME }}"
         command: "createsuperuser --noinput --username={{ django_superuser_name }} --email={{ django_superuser_email_address }}"     
       ignore_errors: True
