@@ -167,7 +167,8 @@
       become: true
       community.general.django_manage:
         command: collectstatic
-        project_path: "{{ PROJECT_HOME }}"               
+        project_path: "{{ PROJECT_HOME }}" 
+        virtualenv: "{{ aws.instance.venv.dir.path }}"               
         
     - name: Remove the Nginx config file
       become: true
