@@ -158,7 +158,8 @@
     - name: Run database migrations
       community.general.django_manage:
         command: migrate
-        project_path: "{{ PROJECT_HOME }}"  
+        project_path: "{{ PROJECT_HOME }}" 
+        virtualenv: "{{ aws.instance.venv.dir.path }}" 
       environment:   
         DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"      
 
