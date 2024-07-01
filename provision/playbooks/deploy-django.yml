@@ -285,6 +285,7 @@
       become: true
       community.general.django_manage:
         project_path: "{{ PROJECT_HOME }}"
+        virtualenv: "{{ aws.instance.venv.dir.path }}"    
         command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ django_superuser_name }}").count() > 0 else 1)'
       register: checksuperuser
       ignore_errors: True
@@ -294,12 +295,23 @@
       become: true
       community.general.django_manage:
         project_path: "{{ PROJECT_HOME }}"
+        virtualenv: "{{ aws.instance.venv.dir.path }}"    
         command: "createsuperuser --noinput --username={{ django_superuser_name }} --email={{ django_superuser_email_address }}"     
       ignore_errors: True
       environment: 
         DATABASE_URL: "{{ aws.instance.postgresql.database.connection.url }}"
         DJANGO_SUPERUSER_PASSWORD: "{{ django_superuser_password }}" 
       when: checksuperuser is not succeeded
+      
+    - name: Check Django admin app superuser exists
+      become: true
+      community.general.django_manage:
+        project_path: "{{ PROJECT_HOME }}"
+        virtualenv: "{{ aws.instance.venv.dir.path }}"    
+        command: shell -c 'import sys; from django.contrib.auth.models import User; sys.exit(0 if User.objects.filter(username="{{ django_superuser_name }}").count() > 0 else 1)'
+      register: checksuperuser
+      ignore_errors: True
+      changed_when: False        
       
   post_tasks:
   
