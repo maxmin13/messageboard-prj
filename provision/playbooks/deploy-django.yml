@@ -205,7 +205,6 @@
     - name: Copy Gunicorn service file
       become: true
       ansible.builtin.template:
-        virtualenv: "{{ aws.instance.venv.dir.path }}" 
         src: gunicorn/gunicorn.service.j2
         dest: "/etc/systemd/system/gunicorn.service" 
         mode: 0400   

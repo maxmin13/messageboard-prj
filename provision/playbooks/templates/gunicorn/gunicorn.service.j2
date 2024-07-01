@@ -7,7 +7,7 @@ After=network.target
 User=root
 Group=root
 WorkingDirectory={{ PROJECT_HOME }}
-ExecStart={{ aws.instance.project.venv.dir.path }}/bin/gunicorn --config {{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py django_project.wsgi:application   
+ExecStart={{ aws.instance.venv.dir.path }}/bin/gunicorn --config {{ aws.instance.gunicorn.config.dir.path }}/gunicorn.conf.py django_project.wsgi:application   
 
 [Install]
 WantedBy=multi-user.target
