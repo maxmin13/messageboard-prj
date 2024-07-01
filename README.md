@@ -51,17 +51,15 @@ chmod +x make.sh
 ## Log in the remote AWS instance: ##
 
 ```
-// log into the remote instance, with your AWS user and the public IP assigned to the AWS instance, ex:
+// ssh into the remote instance, specifing the instance private key and the instance user:
 cd messageboard-prj/access
 
-rm -f ~/.ssh/known_hosts && ssh -v -i <instance private key, eg: messageboard-box> -p 22 <instance user, see datacenter.json, eg: msgadmin>@176.34.196.38
+rm -f ~/.ssh/known_hosts && ssh -v -i messageboard-box -p 22  msgadmin@messageboard.maxmin.it
 ```
 
 ## Access Django admin site at: ##
 
 *https://messageboard.maxmin.it:8443/admin*
-<br>
-*https://AWS-instance-public-IP-address:8443/admin*
 
 userid: admin<br>
 password: admin
@@ -70,7 +68,6 @@ password: admin
 ## Access the messageboard webapp at: ##
 
 *https://messageboard.maxmin.it:8443*<br>
-*https://AWS-instance-public-IP-address:8443*
 
 
 ## Delete the datacenter and the application: ##
